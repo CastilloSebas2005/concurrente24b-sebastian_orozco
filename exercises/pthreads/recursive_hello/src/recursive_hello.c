@@ -13,9 +13,7 @@ void* greet(void* data);
 // procedure main:
 int main(void) {
   // create_thread(greet)
-  // se va al stack frame
   pthread_t thread;
-  //Runtime, es decir solicita crear un hilo al SO, además de crear otro stack frame.
   int error = pthread_create(&thread, /*attr*/ NULL, greet, /*arg*/ NULL);
   if (error == EXIT_SUCCESS) {
     // print "Hello from main thread"
