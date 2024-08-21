@@ -14,7 +14,8 @@ void* greet(void* data);
 int main(void) {
   // create_thread(greet)
   pthread_t thread;
-  int error = pthread_create(&thread, /*attr*/ NULL, greet, /*arg*/ NULL);
+  size_t number = 2;
+  int error = pthread_create(&thread, /*attr*/ NULL, greet, /*arg*/ &number);
   if (error == EXIT_SUCCESS) {
     // print "Hello from main thread"
     // usleep(1);  // indeterminism
@@ -28,8 +29,17 @@ int main(void) {
 
 // procedure greet:
 void* greet(void* data) {
-  (void)data;
-  // print "Hello from secondary thread"
-  printf("Hello from secondary thread\n");
+  //se hace la conversión de datos para no afectar la firma de pthreads y que el programa no falle
+  size_t number = *(size_t*)(data); 
+  if(number == 0){ 
+    printf("Good bye from secundary thread\n");
+    //se hace el return para que se salga de la función cuando el valor es 0
+    return NULL;
+  }else if(number > 0){
+    printf("Hello from secondary thread %li\n", number);
+    number--;
+    //se llama a la función greet con un valor menos para number
+    return greet(&number);
+  }
   return NULL;
 }  // end procedure
