@@ -1,6 +1,9 @@
 # concurrente24b-Sebastian_Orozco
 
-Glossary: 
+# Repositorio para programación paralela y concurrente
+
+
+# Glossary 
 
 Programación serial(secuencial): Secuencia de instrucciones ejecutadas una detrás de otra o en orden secuencial, en este mundo no se hacen cosas de forma simultánea. Por ejemplo si tengo 1,2,3,4,5(suponiendo que estas sean instrucciones o tareas de un programa) primero se ejecuta la instrucción 1, cuando esta termina se ejecuta la instrucción 2 y así sucesivamente hasta que se acaben los números(llegar al 5).
 
