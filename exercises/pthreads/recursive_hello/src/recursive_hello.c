@@ -31,15 +31,21 @@ int main(void) {
 void* greet(void* data) {
   //se hace la conversión de datos para no afectar la firma de pthreads y que el programa no falle
   size_t number = *(size_t*)(data); 
+  //se define el hilo que se usará posteriormente
   if(number == 0){ 
-    printf("Good bye from secundary thread\n");
+    printf("Good bye from other thread\n");
     //se hace el return para que se salga de la función cuando el valor es 0
     return NULL;
   }else if(number > 0){
-    printf("Hello from secondary thread %li\n", number);
+    printf("Hello from thread %li\n", number);
     number--;
+    //se crea un nuevo hilo y se llama a la función greet con un valor menor
+    pthread_t thread;
+    int error = pthread_create(&thread, NULL, greet, &number);
+    if (error == EXIT_SUCCESS) {
+      pthread_join(thread, NULL);
+    }
     //se llama a la función greet con un valor menos para number
-    return greet(&number);
   }
   return NULL;
 }  // end procedure
