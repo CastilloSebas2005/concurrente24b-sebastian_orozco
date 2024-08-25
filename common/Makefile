@@ -253,6 +253,18 @@ memcheck: $(EXEFILE)  ## Run executable for detecting memory errors with Valgrin
 helgrind: $(EXEFILE)  ## Run executable for detecting thread errors with Valgrind
 	valgrind -q -s --sigill-diagnostics=yes --tool=helgrind $(EXEARGS)
 
+asan: $(INPUTFC)
+	cc -g -Wall -Wextra -fsanitize=address $(INPUTFC) -o $(EXEARGS) -pthread
+
+msan: $(INPUTFC)
+	clang -g -Wall -Wextra -fsanitize=memory $(INPUTFC) -o $(EXEARGS) -pthread
+
+tsan: $(INPUTFC)
+	cc -g -Wall -Wextra -fsanitize=thread $(INPUTFC) -o $(EXEARGS) -pthread
+
+ubsan: $(INPUTFC)
+	cc -g -Wall -Wextra -fsanitize=undefined $(INPUTFC) -o $(EXEARGS) -pthreadA
+
 .gitignore:  ## Generate a .gitignore file
 	echo $(IGNORES) | tr " " "\n" > .gitignore
 
