@@ -2,6 +2,3 @@
 bin
 build
 doc
-#ignore doxygen archives
-html
-latex
