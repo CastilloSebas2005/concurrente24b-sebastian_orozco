@@ -1,5 +1,2 @@
 *.pyc
 .DS_Store
-#ignore doxygen archives
-html
-latex
