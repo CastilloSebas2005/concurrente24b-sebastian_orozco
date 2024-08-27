@@ -1,10 +1,5 @@
 #target: prerequisites
-#	command to build target
-
-include ../../../common/Makefile
-
-FLAG += -pthread
-
+#command to build target
 APPNAME=$(shell basename $(shell pwd))
 APPARGS=10
 CFLAGS=-g -Wall -Wextra
