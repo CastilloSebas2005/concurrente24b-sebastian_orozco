@@ -3,6 +3,8 @@
 #ifndef CONTROLLER_H
 #define CONTROLLER_H
 
+#include "manager_argument.h"
+
 /**
  @class controller
  @brief This class is going to controlate the calls other classes
@@ -11,6 +13,7 @@
 
 struct controller {
   /* data */
+  manager_argument controllerArgument;
 };
 
 #endif
