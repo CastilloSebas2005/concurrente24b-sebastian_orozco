@@ -19,7 +19,7 @@ Hilo de ejecución:
 
 Indeterminismo: No se sabe que va a pasar, por ejemplo la programación serial se ejecuta de una forma determinísta, se sabe que la instrucción 1 se ejecuta de primero siempre, luego la 2. Con el indeterminismo es lo contrario, no sigue ese orden, puede ser que se ejecute primero la instrucción 3 y luego la 2. 
 
-Memoria privada y compartida:
+Memoria privada y compartida: memoria privada; espacio de memoria en que nadie puede acceder, sin mi permiso o el permiso del sistema operativo.
 
 Espera activa:
 
