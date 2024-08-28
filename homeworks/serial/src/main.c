@@ -1,8 +1,9 @@
 // Copyright [2024] <Sebastián Orozco>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include "manager_argument.h"
-
+#include "path_creator.h"
 /**
  @brief This is the main procedure, this is to validate the argument input is
  correct and call the principal function of program.
@@ -21,7 +22,6 @@ int main(int argc, char *argv[]) {
     printf("Welcome\n");
     manager_argument p;
     init_managerArgument(&p, argv);
-    get_arg1(&p);
   } else if (argc <= 3) {
     fprintf(stderr, "Error: this program need three argument to work\n");
     return 1;

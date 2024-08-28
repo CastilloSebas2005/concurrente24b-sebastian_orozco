@@ -1,25 +1,18 @@
 // Copyright [2024] <Sebastián Orozco>
 
-#ifndef MANAGER_ARGUMENT_h
-#define MANAGER_ARGUMENT_h
+#ifndef MANAGER_ARGUMENT_H
+#define MANAGER_ARGUMENT_H
 
 /**
  @class manager_argument
- @brief This class is going to controlate the inputs arguments, to prevent
+ @brief This class is going to controlate the inputs arguments and return the path of archives, to prevent
  incovenients
- @details his atributtes are the num of args needed to work argv1 is the name of
- job archive and argv2 is the path of job archive and argv3 the name of path to
- output archive
+ @details his atributes are inputPath, this path contains the job file path and outputPath to get path correctly
 */
 
 typedef struct {
-  /* data */
-  /// name of the job archive
-  char *argv1;
-  /// path of the job archive and plates archives
-  char *argv2;
-  /// path of the output archive
-  char *argv3;
+  char *jobPath;
+  char *outputPath;
 } manager_argument;
 
 /**
@@ -29,18 +22,15 @@ typedef struct {
  */
 void init_managerArgument(manager_argument *manager, char *argv[]);
 
-/// @brief This procedure is to get the argv that contains the file
-/// @param manager this is the type of class created by struct def
-/// @return this function returns the argv1 of the manager_argument
-char *get_arg1(manager_argument *manager);
+/**
+ *  @brief This procedure is to get job file path
+ *  @param manager Type of class that contains jobPath
+ */
+char* get_jobPath(manager_argument *manager);
 
-/// @brief This procedure is to get the argv that contains the file
-/// @param manager this is the type of class created by struct def
-/// @return this function returns the argv2 of the manager_argument
-char *get_arg2(manager_argument *manager);
-
-/// @brief This procedure is to get the argv that contains the file
-/// @param manager this is the type of class created by struct def
-/// @return this function returns the argv2 of the manager_argument
-char *get_arg3(manager_argument *manager);
+/**
+ *  @brief This procedure is to get output file path
+ *  @param manager Type of class that contains outputPath
+ */
+char* get_outputPath(manager_argument *manager);
 #endif
