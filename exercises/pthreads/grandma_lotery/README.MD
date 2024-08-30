@@ -21,3 +21,5 @@ Predije que la salida iba a ser:
 
 y acerté, sin embargo se me dificultó pasar una falsa dirección de memoria sin que saltaran los warnings del compilador, en este caso me pareció que la salida era de esperarse ya que se rescatan las variables en el hilo principal y de ahí se imprimen en orden. 
 Me parece interesante como se rescaran valores desde la biblioteca de pthreads, ya que en futuros programas puede ayudar bastante a rescatar datos importantes, para que de esta forma no se pierdan.
+
+nota: no se hizo documentación con doxygen ya que no se pedía en el ejercicio.
