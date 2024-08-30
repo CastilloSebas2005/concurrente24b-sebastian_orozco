@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "hello_iw_pri"
+PROJECT_BRIEF = "Ejemplo comentado sobre memoria privada con hilos"
