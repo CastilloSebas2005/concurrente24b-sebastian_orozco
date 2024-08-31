@@ -16,7 +16,7 @@ typedef struct private_data {
   pthread_t thread_id;
 } private_data_t;
 
-// f unción de hello_w adaptada
+// función de hello_w adaptada
 void *greet(void *data);
 
 // función nueva implementada

@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "hello_order_busywait y delayed_busy_wait"
+PROJECT_BRIEF = "Ejemplo comentado sobre espera activa"
