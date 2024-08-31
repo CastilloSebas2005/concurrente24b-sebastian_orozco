@@ -35,8 +35,8 @@ char* get_jobPath(manager_argument_t *manager);
 char* get_outputPath(manager_argument_t *manager);
 
 /// @brief This function is to know how lines have the file job
-/// @param path 
-/// @return 
+/// @param path Rute of job file
+/// @return The count of lines of the job file
 __uint64_t get_lines_to_read(char* path);
 
 #endif

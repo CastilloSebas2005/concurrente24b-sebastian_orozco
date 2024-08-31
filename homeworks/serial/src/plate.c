@@ -1,20 +1,19 @@
 // Copyright [2024] <Sebastián Orozco>
 
+#include "plate.h"
+#include "path_creator.h"
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "path_creator.h"
-#include "plate.h"
 
 double **makeMatrix(uint64_t R, uint64_t C);
 double **read_binArchive(char *binName, char *subBin);
 void freeMatrix(double **Matrix, uint64_t R);
-char *lineToRead(FILE* file, uint64_t line);
+char *lineToRead(FILE *file, uint64_t line);
 
 void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
                 uint64_t line) {
   // we need to declare all attributes to save them
-  char *BinaryArchive;
   __int64_t Time;
   float Thermal_diffusivity;
   __int32_t Alture;
@@ -25,10 +24,26 @@ void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
     perror("Can't open the file");
     return;
   }
-  char* line_readed = lineToRead(file, line);
-  uint32_t index = 0;
-  while(line_readed[index] != ' '){
+  char *line_readed = lineToRead(file, line);
+  size_t index = 0;
+  while (line_readed[index] != ' ') {
     index++;
+  }
+  // we need one more becase the '\0' character
+  index++;
+  // we need to obtain de size of bin file
+  char *BinaryFile = malloc(sizeof(char) * index);
+
+  // read the line that contains the necesary information to the math part
+  if (sscanf(line_readed, "%s %" SCNd64 " %f %" SCNd32 " %f", BinaryFile, &Time,
+             &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
+    plate->plateM = read_binArchive(BinaryFile, subBin);
+    plate->time = Time;
+    plate->thermal_diffusivity = Thermal_diffusivity;
+    plate->alture = Alture;
+    plate->sensitivity = Sensitivity;
+  } else {
+    perror("Error: the values of jobFile are incorrect");
   }
   fclose(file);
 }
@@ -43,6 +58,7 @@ double **read_binArchive(char *binName, char *subBin) {
   FILE *file = fopen(pathBin, "rb");
   // if file is null, don't exist
   if (!file) {
+    free(pathBin);
     perror("Can't open the bin file");
     return NULL;
   }
@@ -50,33 +66,36 @@ double **read_binArchive(char *binName, char *subBin) {
   uint64_t C = 0;
   // to read first 8 bytes, R = Rows
   if (fread(&R, sizeof(uint64_t), 1, file) != 1) {
-    perror("Error, can't read the rows");
+    free(pathBin);
     fclose(file);
+    perror("Error, can't read the rows");
     return NULL;
   }
   // to read followin 8 bytes, C = columns
   if (fread(&C, sizeof(uint64_t), 1, file) != 1) {
-    perror("Error: can't read the columns");
+    free(pathBin);
     fclose(file);
+    perror("Error: can't read the columns");
     return NULL;
   }
-
   double **matrix = makeMatrix(R, C);
+  // to situate all valors in the matrix
   for (uint64_t i = 0; i < R; i++) {
     for (uint64_t j = 0; j < C; j++) {
       if (fread(&matrix[i][j], sizeof(double), 1, file) != 1) {
-        perror("Error: can't read the matrix values");
         // to free the memory if somthing fail
         for (uint64_t k = 0; k < R; k++) {
           free(matrix[k]);
         }
+        free(pathBin);
         free(matrix);
         fclose(file);
+        perror("Error: can't read the matrix values");
         return NULL;
       }
     }
   }
-  // Imprimir la matriz
+  // to print matrix
   for (uint64_t i = 0; i < R; i++) {
     for (uint64_t j = 0; j < C; j++) {
       printf("%f ", matrix[i][j]);
@@ -125,7 +144,7 @@ void freeMatrix(double **Matrix, uint64_t R) {
   free(Matrix);
 }
 
-char* lineToRead(FILE* file, uint64_t line){
+char *lineToRead(FILE *file, uint64_t line) {
   // we need a buffer to save the line readed
   // but before we need to know the size of buffer
   uint64_t current_line = 0;
@@ -149,7 +168,6 @@ char* lineToRead(FILE* file, uint64_t line){
   rewind(file);
   current_line = 0;
   // if value is 0
-
   while (current_line != line && (cursor = fgetc(file)) != EOF) {
     if (cursor == '\n') {
       current_line++;

@@ -19,7 +19,7 @@ typedef struct {
   // this is the rectangle matrix
   double **plateM;
   // name of the binary archive
-  char *binaryArchive;
+  char *binaryFile;
   // time in seconds
   __int64_t time;
   // this is the alpha constant
