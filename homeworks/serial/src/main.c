@@ -22,7 +22,7 @@ int main(int argc, char *argv[]) {
     printf("Welcome\n");
     plate_t plate;
     char *path = make_path(argv[2], argv[1]);
-    init_plate(&plate, path, argv[2]);
+    init_plate(&plate, path, argv[2], 1);
     free(path);
   } else if (argc <= 3) {
     fprintf(stderr, "Error: this program need three argument to work\n");

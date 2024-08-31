@@ -5,6 +5,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <inttypes.h>
 
 /**
  @class plate
@@ -33,6 +34,7 @@ typedef struct {
 /// @param plate_object object plate
 /// @param jobFilePath path of file that contains job.txt
 /// @param subBin subdirectory where binary path is saved
-void init_plate(plate_t *plate_object, char *jobFilePath, char* subBin);
+/// @param line_to_read this is the number of line that must read.
+void init_plate(plate_t *plate_object, char *jobFilePath, char* subBin, uint64_t line);
 
 #endif
