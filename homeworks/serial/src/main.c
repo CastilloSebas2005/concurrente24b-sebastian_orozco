@@ -2,9 +2,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "manager_argument.h"
-#include "path_creator.h"
-#include "plate.h"
+#include "controller.h"
 /**
  @brief This is the main procedure, this is to validate the argument input is
  correct and call the principal function of program.
@@ -20,12 +18,7 @@
 int main(int argc, char *argv[]) {
   if (argc == 4) {
     printf("Welcome\n");
-    plate_t plate;
-    char *path = make_path(argv[2], argv[1]);
-    init_plate(&plate, path, argv[2], 0);
-    init_plate(&plate, path, argv[2], 1);
-    init_plate(&plate, path, argv[2], 2);
-    free(path);
+    init_controller(argv);
   } else if (argc <= 3) {
     fprintf(stderr, "Error: this program need three argument to work\n");
     return 1;

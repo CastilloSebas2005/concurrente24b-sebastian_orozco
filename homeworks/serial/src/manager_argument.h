@@ -2,16 +2,19 @@
 
 #ifndef MANAGER_ARGUMENT_H
 #define MANAGER_ARGUMENT_H
-
+#include <inttypes.h>
 /**
  @class manager_argument
- @brief This class is going to controlate the inputs arguments and return the path of archives, to prevent
- incovenients
- @details his atributes are inputPath, this path contains the job file path and outputPath to get path correctly
+ @brief This class is going to controlate the inputs arguments and return the
+ path of archives, to prevent incovenients
+ @details his atributes are inputPath, this path contains the job file path and
+ outputPath to get path correctly
 */
 
-typedef struct manager_argumet{
+typedef struct manager_argumet {
+  // this is the path of job file
   char *jobPath;
+  // this is the path where is goint to save the report
   char *outputPath;
 } manager_argument_t;
 
@@ -24,19 +27,19 @@ void init_managerArgument(manager_argument_t *manager, char *argv[]);
 
 /**
  *  @brief This procedure is to get job file path
- *  @param manager Type of class that contains jobPath
+ *  @param manager struct manager_argument that contains jobPath
  */
-char* get_jobPath(manager_argument_t *manager);
+char *get_jobPath(manager_argument_t *manager);
 
 /**
  *  @brief This procedure is to get output file path
- *  @param manager Type of class that contains outputPath
+ *  @param manager struct manager_argument that contains jobPath
  */
-char* get_outputPath(manager_argument_t *manager);
+char *get_outputPath(manager_argument_t *manager);
 
 /// @brief This function is to know how lines have the file job
 /// @param path Rute of job file
 /// @return The count of lines of the job file
-__uint64_t get_lines_to_read(char* path);
+__uint64_t get_lines_to_read(char *path);
 
 #endif

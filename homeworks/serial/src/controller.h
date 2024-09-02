@@ -4,6 +4,8 @@
 #define CONTROLLER_H
 
 #include "manager_argument.h"
+#include "plate.h"
+#include <stdio.h>
 
 /**
  @class controller
@@ -11,9 +13,13 @@
  @details In this moment his implementation are null.
 */
 
-struct controller {
+typedef struct controller {
   /* data */
-  manager_argument controllerArgument;
-};
+  manager_argument_t controllerArgument;
+  plate_t plate;
+
+}controller_t;
+
+void init_controller(char *argv[]);
 
 #endif

@@ -1,16 +1,16 @@
 // Copyright [2024] <Sebastián Orozco>
 
-#include "plate.h"
-#include "path_creator.h"
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include "path_creator.h"
+#include "plate.h"
 
 double **makeMatrix(uint64_t R, uint64_t C);
-double **read_binArchive(char *binName, char *subBin);
+double **read_binArchive(plate_t* plate,char *binName, char *subBin);
+double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal);
 void freeMatrix(double **Matrix, uint64_t R);
 char *lineToRead(FILE *file, uint64_t line);
-
 void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
                 uint64_t line) {
   // we need to declare all attributes to save them
@@ -37,14 +37,17 @@ void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   // read the line that contains the necesary information to the math part
   if (sscanf(line_readed, "%s %" SCNd64 " %f %" SCNd32 " %f", BinaryFile, &Time,
              &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
-    plate->plateM = read_binArchive(BinaryFile, subBin);
+    plate->plateM1 = read_binArchive(plate ,BinaryFile, subBin);
+    plate->plateM2 = copy_matrix(plate->rows, plate->colums, plate->plateM1);
     plate->time = Time;
     plate->thermal_diffusivity = Thermal_diffusivity;
     plate->alture = Alture;
     plate->sensitivity = Sensitivity;
+    plate->lineReaded = line_readed;
   } else {
     perror("Error: the values of jobFile are incorrect");
   }
+  free(BinaryFile);
   fclose(file);
 }
 
@@ -52,7 +55,7 @@ void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
 /// @param binName name of the binary archive
 /// @param subBin subdirectory of binary archive
 /// @return a matrix with values
-double **read_binArchive(char *binName, char *subBin) {
+double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
   // to make binary archive path
   char *pathBin = make_path(subBin, binName);
   FILE *file = fopen(pathBin, "rb");
@@ -78,7 +81,13 @@ double **read_binArchive(char *binName, char *subBin) {
     perror("Error: can't read the columns");
     return NULL;
   }
+  plate->rows = R;
+  plate->colums = C;
   double **matrix = makeMatrix(R, C);
+  if(!matrix){
+    perror("Can't make matrix");
+    return NULL;
+  }
   // to situate all valors in the matrix
   for (uint64_t i = 0; i < R; i++) {
     for (uint64_t j = 0; j < C; j++) {
@@ -178,4 +187,14 @@ char *lineToRead(FILE *file, uint64_t line) {
     printf("%s\n", buffer);
   }
   return buffer;
+}
+
+double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal){
+  double** matrixCopy = makeMatrix(R,C);
+  for (uint64_t i = 0; i < R; i++) {
+    for (uint64_t j = 0; j < C; j++) {
+      matrixCopy[i][j] = matrixOriginal[i][j];
+    }
+  }
+  return matrixCopy;
 }

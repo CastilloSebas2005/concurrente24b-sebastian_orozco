@@ -5,6 +5,14 @@
 #include "path_creator.h"
 
 char *make_path(char *subdirectory, char *nameArchive) {
+  if(!subdirectory){
+    fprintf(stderr, "Error: subdirectory is null\n");
+    return NULL;
+  }
+  if(!nameArchive){
+    fprintf(stderr, "Error: nameArchive is null\n");
+    return NULL;
+  }
   // this is to calculate the memory corretly
   size_t length1 = 0;
   while (subdirectory[length1] != '\0') {
