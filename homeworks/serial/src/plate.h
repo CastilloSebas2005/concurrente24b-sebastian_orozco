@@ -20,7 +20,7 @@ typedef struct plate {
   // time in seconds
   __int64_t time;
   // this is the alpha constant
-  float thermal_diffusivity;
+  double thermal_diffusivity;
   // this is the h in the formula
   __int32_t alture;
   // this is the epsilon constant
@@ -36,7 +36,7 @@ typedef struct plate {
 /// @param jobFilePath path of file that contains job.txt
 /// @param subBin subdirectory where binary path is saved
 /// @param line_to_read this is the number of line that must read.
-void init_plate(plate_t *plate, char *jobFilePath, char* subBin, uint64_t line);
+uint8_t init_plate(plate_t *plate, char *jobFilePath, char* subBin, uint64_t line);
 
 /// @brief This is to get the matrix already charge with his values
 /// @param plate struct plate
@@ -58,4 +58,8 @@ float get_thermalDifusivity(plate_t *plate);
 /// @return the alture of file line indicated
 __int32_t get_alture(plate_t *plate);
 
+/// @brief This is to liberate the memory
+/// @param plate struct plate
+/// @return 0 if liberate correctly the memory 1 if something bad
+__uint8_t destruct_plate(plate_t *plate);
 #endif

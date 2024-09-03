@@ -42,4 +42,7 @@ char *get_outputPath(manager_argument_t *manager);
 /// @return The count of lines of the job file
 __uint64_t get_lines_to_read(char *path);
 
+/// @brief This is to liberate the memory of manager argument
+/// @param manager struct manager_argument
+void destruct_manager(manager_argument_t *manager);
 #endif

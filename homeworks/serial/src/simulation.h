@@ -8,6 +8,6 @@
 
 #include "plate.h"
 
-void init_simulation(plate_t plate, char* output_path);
+uint8_t init_simulation(plate_t plate, char* output_path);
 
 #endif

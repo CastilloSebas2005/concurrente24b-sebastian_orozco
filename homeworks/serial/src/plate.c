@@ -11,18 +11,18 @@ double **read_binArchive(plate_t* plate,char *binName, char *subBin);
 double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal);
 void freeMatrix(double **Matrix, uint64_t R);
 char *lineToRead(FILE *file, uint64_t line);
-void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
+uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
                 uint64_t line) {
   // we need to declare all attributes to save them
   __int64_t Time;
-  float Thermal_diffusivity;
+  double Thermal_diffusivity;
   __int32_t Alture;
-  float Sensitivity;
+  double Sensitivity;
   FILE *file = fopen(jobFilePath, "r");
   // if file is null, don't exist
   if (!file) {
-    perror("Can't open the file");
-    return;
+    perror("Error: can't open the file");
+    return 0;
   }
   char *line_readed = lineToRead(file, line);
   size_t index = 0;
@@ -33,9 +33,9 @@ void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   index++;
   // we need to obtain de size of bin file
   char *BinaryFile = malloc(sizeof(char) * index);
-
+  
   // read the line that contains the necesary information to the math part
-  if (sscanf(line_readed, "%s %" SCNd64 " %f %" SCNd32 " %f", BinaryFile, &Time,
+  if (sscanf(line_readed, "%s %" SCNd64 " %lf %" SCNd32 " %lf", BinaryFile, &Time,
              &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
     plate->plateM1 = read_binArchive(plate ,BinaryFile, subBin);
     plate->plateM2 = copy_matrix(plate->rows, plate->colums, plate->plateM1);
@@ -46,9 +46,11 @@ void init_plate(plate_t *plate, char *jobFilePath, char *subBin,
     plate->lineReaded = line_readed;
   } else {
     perror("Error: the values of jobFile are incorrect");
+    return 0;
   }
   free(BinaryFile);
   fclose(file);
+  return 1;
 }
 
 /// @brief this is to read the binary archive and load the values in the matrix
@@ -62,7 +64,7 @@ double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
   // if file is null, don't exist
   if (!file) {
     free(pathBin);
-    perror("Can't open the bin file");
+    perror("Error: can't open the bin file");
     return NULL;
   }
   uint64_t R = 0;
@@ -71,7 +73,7 @@ double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
   if (fread(&R, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error, can't read the rows");
+    perror("Error: can't read the rows");
     return NULL;
   }
   // to read followin 8 bytes, C = columns
@@ -85,7 +87,7 @@ double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
   plate->colums = C;
   double **matrix = makeMatrix(R, C);
   if(!matrix){
-    perror("Can't make matrix");
+    perror("Error: can't make matrix");
     return NULL;
   }
   // to situate all valors in the matrix
@@ -124,7 +126,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
   // creation of rows
   double **matrix = malloc(R * sizeof(uint64_t));
   if (!matrix) {
-    perror("Error, value of rows if 0");
+    perror("Error: value of rows if 0");
     return NULL;
   }
   // creation of columns
@@ -136,7 +138,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
         free(matrix[j]);
       }
       free(matrix);
-      perror("Error, value of rows if 0");
+      perror("Error: value of rows if 0");
       return NULL;
     }
   }
@@ -197,4 +199,11 @@ double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal){
     }
   }
   return matrixCopy;
+}
+
+uint8_t destruct_plate(plate_t *plate){
+  freeMatrix(plate->plateM1, plate->rows);
+  freeMatrix(plate->plateM2, plate->rows);
+  free(plate->lineReaded);
+  return 0;
 }

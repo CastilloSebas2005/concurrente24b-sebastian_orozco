@@ -39,7 +39,7 @@ __uint64_t get_lines_to_read(char *path) {
   FILE *file = fopen(path, "r");
   if (!file) {  // validate that path exist
     perror("Error: can't count the lines");
-    return 1;
+    return 0;
   }
   // now count the lines of file
   __uint64_t lines = 0;
@@ -50,6 +50,7 @@ __uint64_t get_lines_to_read(char *path) {
       lines++;
     }
   }
+  lines++;
   fclose(file);
   return lines;
 }
@@ -77,4 +78,9 @@ char* extract_outputName(char* jobFile){
   }
   fprintf(stderr, "Error: this program need a file called jobxxx.txt\n");
   return NULL;
+}
+
+void destruct_manager(manager_argument_t *manager){
+  free(manager->jobPath);
+  free(manager->outputPath);
 }
