@@ -124,14 +124,14 @@ double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
 /// @return return a matrix with trash, because his values don't inicialite yet
 double **makeMatrix(uint64_t R, uint64_t C) {
   // creation of rows
-  double **matrix = malloc(R * sizeof(uint64_t));
+  double **matrix = malloc(R * sizeof(double));
   if (!matrix) {
     perror("Error: value of rows if 0");
     return NULL;
   }
   // creation of columns
   for (uint64_t i = 0; i < R; i++) {
-    matrix[i] = malloc(C * sizeof(uint64_t));
+    matrix[i] = malloc(C * sizeof(double));
     if (!matrix[i]) {
       // if we have an error, we have to free the memory
       for (uint64_t j = 0; j < i; j++) {
