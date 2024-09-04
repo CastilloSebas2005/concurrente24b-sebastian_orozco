@@ -22,7 +22,12 @@ Memoria privada y compartida: memoria privada; espacio de memoria en que nadie p
 
 Espera activa: proceso donde repetidamente se verifica una condición, esto gasta el tiempo de CPU. Es como estar preguntando "¿ya puedo pasar?"
 
-Condición de carrera:
+Condición de carrera: cuando dos o más hilos o procesos quieren acceder al mismo recurso compartido al mismo tiempo y están compitiendo por ese recurso, es como una carrera, el primero que llegue es el que gana, depende del SOS.
+Requisitos para condiciones de carrera:
+
+1. concurrencia
+
+2. recursos compartidos
 
 Control de concurrencia:
 
