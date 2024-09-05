@@ -27,7 +27,7 @@ image::class_diagram.svg[link="<url-provided-by-your-design-tool>"]
 [#pseudocode]
 [source,delphi]
 ----
-include::solution.pseudo[]
+include::solution.pseudo[init_controller]
 ----
 
 #Other programming paradigms can be included. E.g: event-oriented can be explained using state-machines. Functional programming using math formulas.#
