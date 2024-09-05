@@ -9,6 +9,8 @@
  @details In this moment his implementation are null.
 */
 
+/// @brief this is to control the simulation
+/// @param argv arguments
 void init_controller(char *argv[]);
 
 #endif

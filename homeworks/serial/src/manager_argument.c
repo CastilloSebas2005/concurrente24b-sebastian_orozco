@@ -1,12 +1,12 @@
 // Copyright [2024] <Sebastián Orozco>
 
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <inttypes.h>
-#include "path_creator.h"
 #include "manager_argument.h"
+#include "path_creator.h"
 
-char* extract_outputName(char* jobFile);
+char *extract_outputName(char *jobFile);
 
 void init_managerArgument(manager_argument_t *manager, char *argv[]) {
   // create the path of job file
@@ -58,22 +58,22 @@ __uint64_t get_lines_to_read(char *path) {
 /// @brief this is to extract the jobxxx.txt and create the jobxxx.txt
 /// @param jobFile name of file
 /// @return jobxxx.tsv or NULL if don't exist job file
-char* extract_outputName(char* jobFile){
+char *extract_outputName(char *jobFile) {
   // if exist the name of job
-  if(jobFile[0] == 'j' && jobFile[1] == 'o' && jobFile[2] == 'b'){
+  if (jobFile[0] == 'j' && jobFile[1] == 'o' && jobFile[2] == 'b') {
     size_t size = 0;
-    while(jobFile[size] != '.'){
+    while (jobFile[size] != '.') {
       size++;
     }
     // to .tsv'\0'
     size = size + 5;
-    char* jobName = malloc(size* sizeof(char));
+    char *jobName = malloc(size * sizeof(char));
     __uint8_t i;
-    for(i = 0; jobFile[i] != '.'; i++){
+    for (i = 0; jobFile[i] != '.'; i++) {
       jobName[i] = jobFile[i];
     }
-    char* extention = ".tsv";
-    for(__uint8_t j = 0; extention[j] != '\0'; j++, i++){
+    char *extention = ".tsv";
+    for (__uint8_t j = 0; extention[j] != '\0'; j++, i++) {
       jobName[i] = extention[j];
     }
     jobName[i++] = '\0';
@@ -83,7 +83,7 @@ char* extract_outputName(char* jobFile){
   return NULL;
 }
 
-void destruct_manager(manager_argument_t *manager){
+void destruct_manager(manager_argument_t *manager) {
   free(manager->jobPath);
   free(manager->outputPath);
 }

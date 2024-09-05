@@ -1,15 +1,15 @@
 // Copyright [2024] <Sebastián Orozco>
 
+#include "path_creator.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "path_creator.h"
 
 char *make_path(char *subdirectory, char *nameArchive) {
-  if(!subdirectory){
+  if (!subdirectory) {
     fprintf(stderr, "Error: subdirectory is null\n");
     return NULL;
   }
-  if(!nameArchive){
+  if (!nameArchive) {
     fprintf(stderr, "Error: nameArchive is null\n");
     return NULL;
   }

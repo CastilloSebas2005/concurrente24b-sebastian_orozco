@@ -11,7 +11,12 @@
  outputPath to get path correctly
 */
 
-typedef struct manager_argumet {
+/** @var manager_argument::jobPath
+ *  This is the path of job file
+ *  @var manager_argument::outputPath
+ * This is the path of output file
+ */
+typedef struct manager_argument {
   // this is the path of job file
   char *jobPath;
   // this is the path where is goint to save the report

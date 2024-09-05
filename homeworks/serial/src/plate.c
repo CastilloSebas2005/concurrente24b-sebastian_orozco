@@ -7,12 +7,12 @@
 #include "plate.h"
 
 double **makeMatrix(uint64_t R, uint64_t C);
-double **read_binArchive(plate_t* plate,char *binName, char *subBin);
-double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal);
+double **read_binArchive(plate_t *plate, char *binName, char *subBin);
+double **copy_matrix(uint64_t R, uint64_t C, double **matrixOriginal);
 void freeMatrix(double **Matrix, uint64_t R);
 char *lineToRead(FILE *file, uint64_t line);
 uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
-                uint64_t line) {
+                   uint64_t line) {
   // we need to declare all attributes to save them
   __int64_t Time;
   double Thermal_diffusivity;
@@ -22,30 +22,36 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   // if file is null, don't exist
   if (!file) {
     perror("Error: can't open the file");
+    fclose(file);
     return 0;
   }
   char *line_readed = lineToRead(file, line);
+  if (!line_readed) {
+    fclose(file);
+    return 0;
+  }
   size_t index = 0;
   while (line_readed[index] != ' ') {
     index++;
   }
   // we need one more becase the '\0' character
   index++;
+  printf("%li index\n", index);
   // we need to obtain de size of bin file
   char *BinaryFile = malloc(sizeof(char) * index);
-  
+
   // read the line that contains the necesary information to the math part
-  if (sscanf(line_readed, "%s %" SCNd64 " %lf %" SCNd32 " %lf", BinaryFile, &Time,
-             &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
-    plate->plateM1 = read_binArchive(plate ,BinaryFile, subBin);
-    plate->plateM2 = copy_matrix(plate->rows, plate->colums, plate->plateM1);
+  if (sscanf(line_readed, "%s %" SCNd64 " %lf %" SCNd32 " %lf", BinaryFile,
+             &Time, &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
+    plate->plateM1 = read_binArchive(plate, BinaryFile, subBin);
+    plate->plateM2 = copy_matrix(plate->rows, plate->columns, plate->plateM1);
     plate->time = Time;
     plate->thermal_diffusivity = Thermal_diffusivity;
     plate->alture = Alture;
     plate->sensitivity = Sensitivity;
     plate->lineReaded = line_readed;
   } else {
-    fprintf(stderr,"Error: the values of jobFile are incorrect\n");
+    fprintf(stderr, "Error: the values of jobFile are incorrect\n");
     return 0;
   }
   free(BinaryFile);
@@ -58,7 +64,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
 /// @param binName name of the binary archive
 /// @param subBin subdirectory of binary archive
 /// @return a matrix with values
-double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
+double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   // to make binary archive path
   char *pathBin = make_path(subBin, binName);
   FILE *file = fopen(pathBin, "rb");
@@ -85,9 +91,9 @@ double **read_binArchive(plate_t* plate,char *binName, char *subBin) {
     return NULL;
   }
   plate->rows = R;
-  plate->colums = C;
+  plate->columns = C;
   double **matrix = makeMatrix(R, C);
-  if(!matrix){
+  if (!matrix) {
     perror("Error: can't make matrix");
     return NULL;
   }
@@ -177,10 +183,16 @@ char *lineToRead(FILE *file, uint64_t line) {
       lengthLine++;
     }
   }
+  if (lengthLine == 0) {
+    return NULL;
+  }
   // we need a one more because the last character must be '\0'
   lengthLine++;
   char *buffer = malloc(lengthLine * sizeof(char));
-
+  if (!buffer) {
+    printf("error");
+    return NULL;
+  }
   rewind(file);
   current_line = 0;
   // if value is 0
@@ -193,6 +205,10 @@ char *lineToRead(FILE *file, uint64_t line) {
   if (fgets(buffer, lengthLine, file)) {
     printf("%s\n", buffer);
   }
+  if (buffer[0] == '\n' || buffer[0] == '\0') {
+    free(buffer);
+    return NULL;
+  }
   return buffer;
 }
 
@@ -201,8 +217,8 @@ char *lineToRead(FILE *file, uint64_t line) {
 /// @param C Cols
 /// @param matrixOriginal Matrix created by Binary archive
 /// @return a copy of original matrix
-double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal){
-  double** matrixCopy = makeMatrix(R,C);
+double **copy_matrix(uint64_t R, uint64_t C, double **matrixOriginal) {
+  double **matrixCopy = makeMatrix(R, C);
   for (uint64_t i = 0; i < R; i++) {
     for (uint64_t j = 0; j < C; j++) {
       matrixCopy[i][j] = matrixOriginal[i][j];
@@ -211,7 +227,7 @@ double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal){
   return matrixCopy;
 }
 
-uint8_t destruct_plate(plate_t *plate){
+uint8_t destruct_plate(plate_t *plate) {
   freeMatrix(plate->plateM1, plate->rows);
   freeMatrix(plate->plateM2, plate->rows);
   free(plate->lineReaded);
