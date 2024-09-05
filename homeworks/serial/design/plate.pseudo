@@ -8,7 +8,7 @@ procedure init_plate(plate, jobFilePath, subBin, line)
   
   if file don't exist then
     print error "Error: can't open the file"
-    end procedure
+    return 0
   end if
   
   read the specified line from the file
@@ -23,8 +23,9 @@ procedure init_plate(plate, jobFilePath, subBin, line)
     store values in plate: Time, Thermal_diffusivity, Alture, Sensitivity, lineReaded
   else
     print error "Error: the values of jobFile are incorrect"
-    end procedure
+    return 0
   end if
+  return 1
 end procedure
 
 // leer el archivo binario y hacer la matriz con ello
@@ -35,14 +36,14 @@ procedure read_binArchive(plate, binName, subBin)
   
   if file does not exist then
     print error "Error: can't open the bin file"
-    end procedure
+    return NULL
   end if
   
   read the number of rows (R) and columns (C) from the file
   
   if unable to read rows or columns then
     print error "Error: can't read the matrix"
-    end procedure
+    return NULL
   end if
   
   store the number of rows and columns in plate
@@ -53,7 +54,7 @@ procedure read_binArchive(plate, binName, subBin)
     read matrix values from the file
     if reading fails then
       print "Error: can't create the matrix"
-      end procedure
+      return NULL
     end if
   end for
   
@@ -67,7 +68,7 @@ procedure makeMatrix(R, C)
   
   if memory allocation fails then
     print error // ver código
-    end procedure
+    return NULL
   end if
   
   for each row do
@@ -75,14 +76,14 @@ procedure makeMatrix(R, C)
     
     if allocation fails then
       print error // ver código
-      end procedure
+      return NULL
     end if
   end for
 
   return matrix
 end procedure
 
-// leer una linea específica
+// leer una linea especí
 procedure lineToRead(file, line)
   declare current_line as int
   declare lengthLine as size_t

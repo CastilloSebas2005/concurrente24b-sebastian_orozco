@@ -11,7 +11,7 @@ procedure get_jobPath(manager)
   // Valida si jobPath existe
   if manager.jobPath don't exist then
     print "Error: not found jobPath"
-    end procedure
+    return NULL
   end if
   return manager.jobPath
 end procedure

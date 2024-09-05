@@ -9,7 +9,7 @@ procedure init_controller(argv[])
   // Verificar si las rutas son válidas
   if jobPath is null and output_Path is null then
     print "Error: can't exist the subdirectory, please try again"
-    end procedure
+    return
   end if
 
   // Obtener el número de líneas a leer
@@ -17,7 +17,7 @@ procedure init_controller(argv[])
   if linesToRead = 0 then
     print "Error: something bad in your arguments or jobFile"
     call destruct_manager(manager_argument)
-    end procedure
+    return
   end if
 
   // arreglo de plates
@@ -29,7 +29,7 @@ procedure init_controller(argv[])
     declare error1 as uint8_t := init_plate(plates[i], jobPath, argv[2], i)
     if error1 = 0 then
       print "Error: line of jobfile is blank or corrupt"
-      end procedure
+      return
     end if
 
     declare error2 as uint8_t := init_simulation(plates[i], output_Path)

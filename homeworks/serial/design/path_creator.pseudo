@@ -2,13 +2,13 @@ procedure make_path(subdirectory, nameArchive)
   // Validar si subdirectory es nulo
   if subdirectory is null then
     print "Error: subdirectory is null"
-    end procedure
+    return NULL
   end if
 
   // Validar si nameArchive es nulo
   if nameArchive is null then
     print "Error: nameArchive is null"
-    end procedure
+    return NULL
   end if
 
   // Calcular la longitud de subdirectory
@@ -28,7 +28,7 @@ procedure make_path(subdirectory, nameArchive)
   declare path as string := allocate memory of (length1 + length2)
   if path is null then
     print "Error: can't assign memory correctly"
-    end procedure
+    return NULL
   end if
 
   // Construir el path

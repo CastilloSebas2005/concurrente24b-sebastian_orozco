@@ -1,5 +1,4 @@
 procedure init_simulation(plate, output_path)
-  print "entró"
   // Calcular la fórmula
   declare formula as double := (plate.time * plate.thermal_diffusivity) / (plate.alture * plate.alture)
   declare plate_matrix1 as double[][] := plate.plateM1
@@ -39,7 +38,6 @@ procedure transfer(matrix1, matrix2, formula, R, C, point)
     end for
     states := states + 1
   end while
-  print "salió"
   return states
 end procedure
 
