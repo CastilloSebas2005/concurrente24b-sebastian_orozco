@@ -1,0 +1,7 @@
+Número de argumentos: 4
+Argumento 0: ./bin/serial
+Argumento 1: f
+Argumento 2: g
+Argumento 3: g
+Welcome
+g/f

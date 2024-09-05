@@ -1,0 +1,117 @@
+// inicializando el plate
+procedure init_plate(plate, jobFilePath, subBin, line)
+  declare Time as int64
+  declare Thermal_diffusivity as double
+  declare Alture as int32
+  declare Sensitivity as double
+  open file at path jobFilePath
+  
+  if file don't exist then
+    print error "Error: can't open the file"
+    end procedure
+  end if
+  
+  read the specified line from the file
+  determine the index where the binary file name ends
+  
+  if line contains valid data then
+    read values from the line (BinaryFile, Time, Thermal_diffusivity, Alture, Sensitivity)
+    
+    plate.plateM1 = read_binArchive(plate, BinaryFile, subBin)
+    plate.plateM2 = copy_matrix(plate.rows, plate.columns, plate.plateM1)
+    
+    store values in plate: Time, Thermal_diffusivity, Alture, Sensitivity, lineReaded
+  else
+    print error "Error: the values of jobFile are incorrect"
+    end procedure
+  end if
+end procedure
+
+// leer el archivo binario y hacer la matriz con ello
+procedure read_binArchive(plate, binName, subBin)
+  create full path for binary file
+  
+  open binary file
+  
+  if file does not exist then
+    print error "Error: can't open the bin file"
+    end procedure
+  end if
+  
+  read the number of rows (R) and columns (C) from the file
+  
+  if unable to read rows or columns then
+    print error "Error: can't read the matrix"
+    end procedure
+  end if
+  
+  store the number of rows and columns in plate
+  
+  create matrix with dimensions R x C
+  
+  for each row and column in the matrix do
+    read matrix values from the file
+    if reading fails then
+      print "Error: can't create the matrix"
+      end procedure
+    end if
+  end for
+  
+  print the matrix values
+  return matrix
+end procedure
+
+// crear la matriz
+procedure makeMatrix(R, C)
+  allocate memory for matrix rows
+  
+  if memory allocation fails then
+    print error // ver código
+    end procedure
+  end if
+  
+  for each row do
+    allocate memory for columns
+    
+    if allocation fails then
+      print error // ver código
+      end procedure
+    end if
+  end for
+
+  return matrix
+end procedure
+
+// leer una linea específica
+procedure lineToRead(file, line)
+  declare current_line as int
+  declare lengthLine as size_t
+  declare cursor as char
+  
+  find the line in the file by counting newline characters
+  
+  if found then
+    calculate the line's length
+  end if
+  
+  allocate memory for buffer
+  
+  rewind the file and move to the specified line
+  
+  if line is found then
+    read and print the line into buffer
+  end if
+  
+  return buffer
+end procedure
+
+// Copying values from the original matrix to a new one
+procedure copy_matrix(R, C, matrixOriginal)
+  create matrixCopy with dimensions R x C
+  
+  for each element in matrixOriginal do
+    copy values to matrixCopy
+  end for
+  
+  return matrixCopy
+end procedure

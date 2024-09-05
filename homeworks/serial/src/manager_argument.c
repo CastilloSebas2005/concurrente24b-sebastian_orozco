@@ -55,6 +55,9 @@ __uint64_t get_lines_to_read(char *path) {
   return lines;
 }
 
+/// @brief this is to extract the jobxxx.txt and create the jobxxx.txt
+/// @param jobFile name of file
+/// @return jobxxx.tsv or NULL if don't exist job file
 char* extract_outputName(char* jobFile){
   // if exist the name of job
   if(jobFile[0] == 'j' && jobFile[1] == 'o' && jobFile[2] == 'b'){

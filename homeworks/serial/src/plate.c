@@ -45,7 +45,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
     plate->sensitivity = Sensitivity;
     plate->lineReaded = line_readed;
   } else {
-    perror("Error: the values of jobFile are incorrect");
+    fprintf(stderr,"Error: the values of jobFile are incorrect\n");
     return 0;
   }
   free(BinaryFile);
@@ -54,6 +54,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
 }
 
 /// @brief this is to read the binary archive and load the values in the matrix
+/// @param plate struct plate
 /// @param binName name of the binary archive
 /// @param subBin subdirectory of binary archive
 /// @return a matrix with values
@@ -155,6 +156,10 @@ void freeMatrix(double **Matrix, uint64_t R) {
   free(Matrix);
 }
 
+/// @brief This subrutine is to get the line to read and the information
+/// @param file job file
+/// @param line number of line to read
+/// @return the information of that line
 char *lineToRead(FILE *file, uint64_t line) {
   // we need a buffer to save the line readed
   // but before we need to know the size of buffer
@@ -191,6 +196,11 @@ char *lineToRead(FILE *file, uint64_t line) {
   return buffer;
 }
 
+/// @brief This subrutine is to copy values of the original matrix in other
+/// @param R Rows
+/// @param C Cols
+/// @param matrixOriginal Matrix created by Binary archive
+/// @return a copy of original matrix
 double **copy_matrix(uint64_t R, uint64_t C, double** matrixOriginal){
   double** matrixCopy = makeMatrix(R,C);
   for (uint64_t i = 0; i < R; i++) {

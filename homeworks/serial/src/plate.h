@@ -13,6 +13,8 @@
  part, this class must read the archives and generate output file
  @details his atributtes are things that are needed to make calculus part
 */
+
+/// @struct plate
 typedef struct plate {
   // this is the rectangle matrix
   double **plateM1;
@@ -32,31 +34,12 @@ typedef struct plate {
 } plate_t;
 
 /// @brief this is to inicializate plate
-/// @param plate_object struct plate
+/// @param plate struct
 /// @param jobFilePath path of file that contains job.txt
 /// @param subBin subdirectory where binary path is saved
-/// @param line_to_read this is the number of line that must read.
+/// @param line this is the number of line that must read.
+/// @return return 0 if occurs an error and 1 if all is correct
 uint8_t init_plate(plate_t *plate, char *jobFilePath, char* subBin, uint64_t line);
-
-/// @brief This is to get the matrix already charge with his values
-/// @param plate struct plate
-/// @return matrix of doubles(the plate) of the file line indicated
-double** get_matrix(plate_t *plate);
-
-/// @brief This is to get time
-/// @param plate struct plate
-/// @return the time of file line indicated
-__int64_t get_time(plate_t *plate);
-
-/// @brief This is to get the Thermal Difusivity
-/// @param plate struct plate
-/// @return the Thermal Difusivity of file line indicated
-float get_thermalDifusivity(plate_t *plate);
-
-/// @brief This is to get the alture
-/// @param plate struct plate
-/// @return the alture of file line indicated
-__int32_t get_alture(plate_t *plate);
 
 /// @brief This is to liberate the memory
 /// @param plate struct plate

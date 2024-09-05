@@ -22,10 +22,15 @@ void init_controller(char *argv[]){
     printf("%li", linesToRead);
     for(uint64_t i = 0; i < linesToRead; i++){
         uint8_t error1 = init_plate(&plates[i], jobPath, argv[2], i);
+        
+        if(error1 == 0){
+            fprintf(stderr, "Error: line of jobfile is blank or corrupt\n");
+            return;
+        }
         uint8_t error2 = init_simulation(plates[i], output_Path);
         destruct_plate(&plates[i]);
-        if(error1 == 0 && error2 == 0){
-            fprintf(stderr, "Error: something bad in your arguments\n");
+        if(error2 == 0){
+            fprintf(stderr, "Error: something bad in the simulation\n");
         }
     }
     destruct_manager(&manager_argument);
