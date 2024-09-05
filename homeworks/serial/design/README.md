@@ -6,13 +6,15 @@ Table of Contents
 
 Para la solución orientada a objetos se implementó el siguiente diagrama UML, el cual describe todos los objetos controladores, y como están correlacionados entre ellos.
 
-![UML.jpg](UML.jpg)
+![UML.png](UML.png)
 
 (mejor ver imágen y hacer zoom para leer porque quedó un poco pequeño)
 
 ## Procedural design
 
 A continuación se van a dejar todos los diseños de pseudocódigo que se hicieron, los diseños de pseudocódigos abarcan todo el código del programa.
+
+Por razones de espacio y legibilidad, solo se van a dejar las funciones que inicializan de cada pseudo, pero se dejará la ruta por si se desea ver más a profundidad cada pseudo que se hizo.
 
 [path_creator.pseudo](path_creator.pseudo)
 
@@ -210,3 +212,7 @@ end procedure
 ## Memory Diagram
 
 Este es un diagrama de como se vería la memoria, no se quiere hacer exacto, pues sería muy difícil ya que en tiempo de compilación el tamaño de muchas variables es asignado, entonces depende de la arquitectura de la computadora donde se esté corriendo.
+
+Cabe recalcar que el diagrama no es exacto, simplemente es una represente una aproximación a como se está usando la memoria, se tomó de referencia el de la página de jeisson simplemente se adapto a este trabajo, solo hay un mainthread, no se están creando más debido a que el programa es 100% serial.
+
+![MemoryDiagram.png](MemoryDiagram.png)
