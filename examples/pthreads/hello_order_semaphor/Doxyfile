@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "hello_order_semaphor"
+PROJECT_BRIEF = "Ejemplo comentado sobre semáforos"

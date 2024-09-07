@@ -27,11 +27,13 @@ Requisitos para condiciones de carrera:
 
 1. concurrencia
 
-2. recursos compartidos
+1. recursos compartidos
+
+1. escritura en memoria
 
 Control de concurrencia:
 
-Seguridad condicional:
+Seguridad condicional: Es usar memoria compartida sin embargo no todos pueden usarla al mismo tiempo, es como tener una piscina con carriles, todos pueden estar en ella, 
 
 Exclusión mutua:
 
