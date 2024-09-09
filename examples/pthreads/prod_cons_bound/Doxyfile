@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "prod_cons_bound"
+PROJECT_BRIEF = "Ejemplo comentado sobre patrón productor-consumidor"

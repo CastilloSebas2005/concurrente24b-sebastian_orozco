@@ -1,0 +1,54 @@
+procedure main(argc, argv[]):
+  if argc = 7 then
+    // acá se agregan los argumentos enviados de la línea de comandos
+    shared buffer_capacity := integer(argv[1])
+    // se le asigna la capacidad al buffer
+    shared buffer as array of buffer_capacity of float
+    shared rounds := integer(argv[2])
+    shared producer_min_delay := integer(argv[3])
+    shared producer_max_delay := integer(argv[4])
+    shared consumer_min_delay := integer(argv[5])
+    shared consumer_max_delay := integer(argv[6])
+
+    // estos son semáforos para el productor y consumidor, si produce 1, se puede consumir 1 y viceversa
+    shared can_produce := create_semaphore(buffer_capacity)
+    shared can_consume := create_semaphore(0)
+
+    create_threads(1, produce)
+    create_threads(1, consume)
+  end if
+end procedure
+
+procedure produce:
+  declare count := 0
+  // el productor debe de darle "rounds" vueltas al buffer
+  for round := 1 to rounds do
+    // y en cada una debe de producir esa capacidad
+    for index := 0 to buffer_capacity do
+      // control de acceso al buffer
+      wait(can_produce)
+      delay(random_between(producer_min_delay, producer_max_delay))
+      buffer[index] := ++count
+      print("Produced ", buffer[index])
+      signal(can_consume)
+    end for
+  end for
+end procedure
+
+// el consumidor hace lo mismo, solo que en vez de producir extrae
+procedure consume:
+  for round := 1 to rounds do
+    for index := 0 to buffer_capacity do
+      wait(can_consume)
+      value := buffer[index]
+      delay(random_between(consumer_min_delay, consumer_max_delay))
+      print("Consumed ", value)
+      signal(can_produce)
+    end for
+  end for
+end procedure
+
+// función que genera número pseudoaleatorio
+function random_between(min, max):
+  return min + rand() % (max - min)
+end function

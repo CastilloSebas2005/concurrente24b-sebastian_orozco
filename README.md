@@ -33,7 +33,7 @@ Requisitos para condiciones de carrera:
 
 Control de concurrencia:
 
-Seguridad condicional: Es usar memoria compartida sin embargo no todos pueden usarla al mismo tiempo, es como tener una piscina con carriles, todos pueden estar en ella, 
+Seguridad condicional: Es usar memoria compartida sin embargo no todos pueden usarla al mismo tiempo, es como tener una piscina con carriles, todos pueden estar en ella, nadando en diferentes lugares, es útil porque es para evitar condiciones de carrera.
 
 Exclusión mutua:
 
