@@ -1,0 +1,92 @@
+/** 
+Variante 0: Detiene a los productores con variables contadoras
+y redundancia de código. Incluye también una variante de consumidor 
+con espera activa a modo de ejemplo de una solución que no es aceptable.
+*/
+
+procedure main(argc, argv[]):
+  if argc = 8 then
+    shared unit_count := integer(argv[1])
+    shared producer_count := integer(argv[2])
+    shared consumer_count := integer(argv[3])
+    shared producer_min_delay := integer(argv[4])
+    shared producer_max_delay := integer(argv[5])
+    shared consumer_min_delay := integer(argv[6])
+    shared consumer_max_delay := integer(argv[7])
+
+    shared queue := create_integer_queue()
+    shared can_access_queue := create_mutex()
+
+    shared next_unit := 0
+    shared can_access_next_unit := create_mutex()
+
+    shared consumed_count := 0
+    shared can_access_consumed_count := create_mutex()
+
+    shared can_consume := create_semaphore(0)
+
+    declare producers := create_threads(producer_count, produce0)
+    declare consumers := create_threads(consumer_count, consume_busywait)
+
+    join_threads(producers)
+    join_threads(consumers)
+  end if
+end procedure
+
+procedure produce0:
+  declare my_unit := 0
+  lock(can_access_next_unit)
+    declare is_there_pending_work := next_unit < unit_count
+    if is_there_pending_work then
+      next_unit := next_unit + 1
+      my_unit := next_unit
+    end if
+  unlock(can_access_next_unit)
+
+  while is_there_pending_work do
+    delay(random_between(producer_min_delay, producer_max_delay))
+    lock(can_access_queue)
+      enqueue(queue, my_unit)
+    unlock(can_access_queue)
+    print("Produced ", my_unit)
+
+    lock(can_access_next_unit)
+      is_there_pending_work := next_unit < unit_count
+      if is_there_pending_work then
+        next_unit := next_unit + 1
+        my_unit := next_unit
+      end if
+    unlock(can_access_next_unit)
+  end while
+end procedure
+
+// note que acá se hace uso de la espera activa
+// trabajos como limpiezas pueden ser difíles en este código
+procedure consume_busywait:
+  while true do
+    lock(can_access_consumed_count)
+      // acá se está viendo la espera activa
+      if consumed_count < unit_count then
+        consumed_count := consumed_count + 1
+      else
+        break while
+      end if
+    unlock(can_access_consumed_count)
+
+    lock(can_access_queue)
+      if is_empty(queue) then
+        lock(can_access_consumed_count)
+          consumed_count := consumed_count - 1
+        unlock(can_access_consumed_count)
+      else
+        declare my_unit := dequeue(queue)
+        print("\tConsuming ", my_unit)
+        delay(random_between(consumer_min_delay, consumer_max_delay))
+      end if
+    unlock(can_access_queue)
+  end while
+end procedure
+
+function random_between(min, max):
+  return min + rand() % (max - min)
+end function

@@ -1,0 +1,54 @@
+procedure main(argc, argv[]):
+  // simplemente ahora se reciben 8 argumentos
+  if argc = 8 then
+    // cantidad de unidades de trabajo
+    shared unit_count := integer(argv[1])
+    // cuantos productores
+    shared producer_count := integer(argv[2])
+    // cuantos consumidores
+    shared consumer_count := integer(argv[3])
+    shared producer_min_delay := integer(argv[4])
+    shared producer_max_delay := integer(argv[5])
+    shared consumer_min_delay := integer(argv[6])
+    shared consumer_max_delay := integer(argv[7])
+
+    // se usa un queue y no un arreglo para que sea más eficiente
+    shared queue := create_integer_queue()
+    // contadores para saber por donde van produciendo los productores
+    // y donde van consumiendo los consumidores
+    shared next_unit := 0
+    shared consumed_count := 0
+
+    // La diferencia con el anterior es que recibe dos argumentos
+    // y ahora se crean varios hilos, _count son la cantidad de hilos que se van a crear
+    // produce y consume siguen igual, cantidad de lo que se quiere consumir y producir
+    declare producers := create_threads(producer_count, produce)
+    declare consumers := create_threads(consumer_count, consume)
+
+    join_threads(producers)
+    join_threads(consumers)
+  end if
+end procedure
+
+procedure produce:
+  while next_unit < unit_count do
+    next_unit := next_unit + 1
+    declare my_unit := next_unit
+    delay(random_between(producer_min_delay, producer_max_delay))
+    enqueue(queue, my_unit)
+    print("Produced ", my_unit)
+  end while
+end procedure
+
+procedure consume:
+  while consumed_count < unit_count do
+    consumed_count := consumed_count + 1
+    declare my_unit := dequeue(queue)
+    print("\tConsuming ", my_unit)
+    delay(random_between(consumer_min_delay, consumer_max_delay))
+  end while
+end procedure
+
+function random_between(min, max):
+  return min + rand() % (max - min)
+end function
