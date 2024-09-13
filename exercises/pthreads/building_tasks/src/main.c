@@ -62,6 +62,18 @@ int main(int argc, char* argv[]) {
     fprintf(stderr, "Usage: building_tasks max_microseconds_duration\n");
     error = EXIT_FAILURE;
   }
+  // to liberate memory
+  sem_destroy(&shared->semafore1);
+  sem_destroy(&shared->semafore2);
+  sem_destroy(&shared->semafore3);
+  sem_destroy(&shared->semafore4);
+  sem_destroy(&shared->semafore5);
+  sem_destroy(&shared->semafore6);
+  sem_destroy(&shared->semafore7);
+  sem_destroy(&shared->semafore8);
+  sem_destroy(&shared->semafore9);
+  sem_destroy(&shared->semafore10);
+  sem_destroy(&shared->semafore11);
   free(shared);
   return error;
 }
@@ -196,6 +208,9 @@ void* exterior_finishes(void* data) {
   puts("4.1 exterior finishes start");
   usleep(lrand48() % shared->max_duration);
   puts("4.1 exterior finishes finish");
+  if (error) {
+    fprintf(stderr, "error: could not wait the semaphore\n");
+  }
   return NULL;
 }
 
@@ -226,6 +241,9 @@ void* floors(void* data) {
   puts("5.3 floor finish");
   // We increase the semaphore to procede with their execution branch
   error = sem_post(&shared->semafore10);
+  if (error) {
+    fprintf(stderr, "error: could not wait the semaphore\n");
+  }
   return NULL;
 }
 
@@ -237,5 +255,8 @@ void* interior_finishes(void* data) {
   puts("6.3 interior finishes start");
   usleep(lrand48() % shared->max_duration);
   puts("6.3 interior finishes finish");
+  if (error) {
+    fprintf(stderr, "error: could not wait the semaphore\n");
+  }
   return NULL;
 }
