@@ -1,0 +1,74 @@
+procedure main(argc, argv[])
+  shared max_duration := integer(argv[1]) // microseconds
+  declare team := reserve_threads(11)
+  add_thread(team, exterior_plumbing)
+  add_thread(team, roof)
+  add_thread(team, exterior_painting)
+  add_thread(team, interior_plumbing)
+  add_thread(team, electrical_installation)
+  add_thread(team, exterior_finishes)
+  add_thread(team, interior_painting)
+  add_thread(team, floor)
+  add_thread(team, interior_finishes)
+  join_threads(team)
+end procedure
+
+procedure walls()
+  print "1.2 walls start"
+  sleep(random(max_duration))
+  print "1.2 walls finish"
+end procedure
+
+procedure exterior_plumbing()
+  print "2.1 exterior plumbing start"
+  sleep(random(max_duration))
+  print "2.1 exterior plumbing finish"
+end procedure
+
+procedure roof()
+  print "2.3 roof start"
+  sleep(random(max_duration))
+  print "2.3 roof finish"
+end procedure
+
+procedure exterior_painting()
+  print "3.1 exterior painting start"
+  sleep(random(max_duration))
+  print "3.1 exterior painting finish"
+end procedure
+
+procedure interior_plumbing()
+  print "3.2 interior plumbing start"
+  sleep(random(max_duration))
+  print "3.2 interior plumbing finish"
+end procedure
+
+procedure electrical_installation()
+  print "3.3 electrical installation start"
+  sleep(random(max_duration))
+  print "3.3 electrical installation finish"
+end procedure
+
+procedure exterior_finishes()
+  print "4.1 exterior finishes start"
+  sleep(random(max_duration))
+  print "4.1 exterior finishes finish"
+end procedure
+
+procedure interior_painting()
+  print "4.3 interior painting start"
+  sleep(random(max_duration))
+  print "4.3 interior painting finish"
+end procedure
+
+procedure floor()
+  print "5.3 floor start"
+  sleep(random(max_duration))
+  print "5.3 floor finish"
+end procedure
+
+procedure interior_finishes()
+  print "6.3 interior finishes start"
+  sleep(random(max_duration))
+  print "6.3 interior finishes finish"
+end procedure

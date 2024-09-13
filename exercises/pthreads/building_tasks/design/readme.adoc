@@ -1,0 +1,17 @@
+= Design of solution
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:stem:
+:toc:
+:xrefstyle: short
+
+
+[[procedural_design]]
+== Procedural design
+
+[#pseudocode]
+[source,delphi]
+----
+include::solution.pseudo[]
+----
