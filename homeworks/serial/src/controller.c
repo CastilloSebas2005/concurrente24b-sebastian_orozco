@@ -11,7 +11,7 @@ void init_controller(char *argv[]) {
   char *jobPath = get_jobPath(&manager_argument);
   char *output_Path = get_outputPath(&manager_argument);
   if (!jobPath && !output_Path) {
-    fprintf(stderr, "Error: can't exist the subdirectory, plase try again\n");
+    fprintf(stderr, "Error: don't exist the subdirectory, plase try again\n");
     return;
   }
   uint64_t linesToRead = get_lines_to_read(jobPath);
@@ -26,13 +26,10 @@ void init_controller(char *argv[]) {
   for (uint64_t i = 0; i < linesToRead; i++) {
     uint8_t error1 = init_plate(&plates[i], jobPath, argv[2], i);
 
-    if (error1 == 0) {
-        fprintf(stderr, "Error: corrupt line\n");
-    } else {
+    if (error1 != 0) {
       error2 = init_simulation(plates[i], output_Path);
-      destruct_plate(&plates[i]);
+      destruct_plate(&plates[i]);  
     }
-
     if (error2 == 0) {
       fprintf(stderr, "Error: something bad in the simulation\n");
     }

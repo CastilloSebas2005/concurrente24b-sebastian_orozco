@@ -21,7 +21,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   FILE *file = fopen(jobFilePath, "r");
   // if file is null, don't exist
   if (!file) {
-    perror("Error: can't open the file");
+    fprintf(stderr, "Error: can't open the file\n");
     fclose(file);
     return 0;
   }
@@ -71,7 +71,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   // if file is null, don't exist
   if (!file) {
     free(pathBin);
-    perror("Error: can't open the bin file");
+    fprintf(stderr,"Error: can't open the bin file\n");
     return NULL;
   }
   uint64_t R = 0;
@@ -80,21 +80,21 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   if (fread(&R, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error: can't read the rows");
+    fprintf(stderr,"Error: can't read the rows\n");
     return NULL;
   }
   // to read followin 8 bytes, C = columns
   if (fread(&C, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error: can't read the columns");
+    fprintf(stderr,"Error: can't read the columns\n");
     return NULL;
   }
   plate->rows = R;
   plate->columns = C;
   double **matrix = makeMatrix(R, C);
   if (!matrix) {
-    perror("Error: can't make matrix");
+    fprintf(stderr,"Error: can't make matrix\n");
     return NULL;
   }
   // to situate all valors in the matrix
@@ -108,7 +108,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
         free(pathBin);
         free(matrix);
         fclose(file);
-        perror("Error: can't read the matrix values");
+        fprintf(stderr,"Error: can't read the matrix values\n");
         return NULL;
       }
     }
@@ -133,7 +133,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
   // creation of rows
   double **matrix = malloc(R * sizeof(double));
   if (!matrix) {
-    perror("Error: value of rows if 0");
+    fprintf(stderr,"Error: don't exist value of rows\n");
     return NULL;
   }
   // creation of columns
@@ -145,7 +145,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
         free(matrix[j]);
       }
       free(matrix);
-      perror("Error: value of rows if 0");
+      fprintf(stderr,"Error: don't exist value of columns\n");
       return NULL;
     }
   }
@@ -190,7 +190,7 @@ char *lineToRead(FILE *file, uint64_t line) {
   lengthLine++;
   char *buffer = malloc(lengthLine * sizeof(char));
   if (!buffer) {
-    printf("error");
+    fprintf(stderr,"Error: can't make the buffer\n");
     return NULL;
   }
   rewind(file);

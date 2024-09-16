@@ -38,7 +38,7 @@ char *get_outputPath(manager_argument_t *manager) {
 __uint64_t get_lines_to_read(char *path) {
   FILE *file = fopen(path, "r");
   if (!file) {  // validate that path exist
-    perror("Error: can't count the lines");
+    fprintf(stderr,"Error: can't count the lines\n");
     return 0;
   }
   // now count the lines of file
@@ -60,6 +60,10 @@ __uint64_t get_lines_to_read(char *path) {
 /// @return jobxxx.tsv or NULL if don't exist job file
 char *extract_outputName(char *jobFile) {
   // if exist the name of job
+  if (!jobFile) {
+    fprintf(stderr, "Error: not found jobFile\n");
+    return NULL;
+  }
   if (jobFile[0] == 'j' && jobFile[1] == 'o' && jobFile[2] == 'b') {
     size_t size = 0;
     while (jobFile[size] != '.') {

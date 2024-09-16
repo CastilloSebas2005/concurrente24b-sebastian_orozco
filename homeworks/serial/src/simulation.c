@@ -71,7 +71,7 @@ void make_report(char *lineReport, time_t time, char *output_path,
                  uint64_t states) {
   FILE *file = fopen(output_path, "a+");
   if (!file) {
-    perror("Error: can't find or create this file");
+    fprintf(stderr, "Error: can't find the path %s\n", output_path);
     return;
   }
   fputs(format_line(lineReport), file);
@@ -82,11 +82,13 @@ void make_report(char *lineReport, time_t time, char *output_path,
   fputs(int_to_char, file);
   fputc('\t', file);
   fputc('\t', file);
-  char timeFormated[48];
-  timeFormated[48] = *format_time(time, timeFormated, sizeof(timeFormated));
+  char *timeFormated = malloc(48 * sizeof(char));
+  timeFormated = format_time(time, timeFormated, 48);
+  printf("%s\n", timeFormated);
   fputs(timeFormated, file);
   fputc('\n', file);
   fclose(file);
+  free(timeFormated);
 }
 
 // Return parameter text must have at least 48 chars (YYYY/MM/DD hh:mm:ss)
