@@ -1,0 +1,63 @@
+procedure init_managerArgument(manager, argv[])
+  // Crear la ruta del archivo de job
+  declare path_job as string := make_path(argv[2], argv[1])
+  declare jobName as string := extract_outputName(argv[1])
+  declare path_output as string := make_path(argv[3], jobName)
+  manager.jobPath := path_job
+  manager.outputPath := path_output
+end procedure
+
+procedure get_jobPath(manager)
+  // Valida si jobPath existe
+  if manager.jobPath don't exist then
+    print "Error: not found jobPath"
+    return NULL
+  end if
+  return manager.jobPath
+end procedure
+
+procedure get_outputPath(manager)
+  // Valida si outputPath existe
+  if manager.outputPath don't exist then
+    return NULL
+  end if
+  return manager.outputPath
+end procedure
+
+procedure get_lines_to_read(path)
+  declare file as FILE := open path as file
+  // verifica si el archivo se abrió
+  if file is null then
+    return NULl
+  end if
+
+  // Cuenta las lineas
+  declare lines as uint64_t := 0
+  declare c as char
+  while (c := fgetc(file)) != EOF do
+    if c = '\n' then
+      lines := lines + 1
+    end if
+  end while
+  // retorna una más para efectos del ciclo
+  lines := lines + 1
+  close file
+  return lines
+end procedure
+
+procedure extract_outputName(jobFile)
+  // Valida si el nombre del archivo de trabajo es correcto
+  if jobFile starts with "job" then
+    declare size as size_t := length until '.'
+    declare jobName as string := allocate memory of size
+    for i := 0 to length until '.' do
+      jobName[i] := jobFile[i]
+    end for
+    declare extention as string := ".tsv"
+    for j := 0 to length of extention do
+      jobName[i + j] := extention[j]
+    end for
+    jobName[i + length of extention] := '\0'
+    return jobName
+  end if
+end procedure

@@ -1,0 +1,42 @@
+procedure init_controller(argv[])
+  // Inicializar manager_argument
+  call init_managerArgument(manager_argument, argv)
+
+  // Obtener rutas de trabajo y salida
+  declare jobPath as string := path of job file
+  declare output_Path as string := path of output file
+  
+  // Verificar si las rutas son válidas
+  if jobPath is null and output_Path is null then
+    print "Error: can't exist the subdirectory, please try again"
+    return
+  end if
+
+  // Obtener el número de líneas a leer
+  declare linesToRead as uint64_t := get_lines_to_read(jobPath)
+  if linesToRead = 0 then
+    print "Error: something bad in your arguments or jobFile"
+    call destruct_manager(manager_argument)
+    return
+  end if
+
+  // arreglo de plates
+  declare plates[linesToRead] as plate_t
+  print linesToRead
+
+  // Inicializar y simular cada plate
+  for i := 0 to linesToRead - 1 do
+    declare error1 as uint8_t := init_plate(plates[i], jobPath, argv[2], i)
+    if error1 = 0 then
+      print "Error: line of jobfile is blank or corrupt"
+      return
+    end if
+
+    declare error2 as uint8_t := init_simulation(plates[i], output_Path)
+    call destruct_plate(plates[i])
+    if error2 = 0 then
+      print "Error: something bad in the simulation"
+    end if
+  end for
+
+end procedure
