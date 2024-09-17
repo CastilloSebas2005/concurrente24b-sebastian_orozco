@@ -38,6 +38,9 @@ void init_controller(char *argv[]) {
     init_plate(&plates[i], jobPath, argv[2], i);
   }
   create_threads(thread_count, plates, linesToRead);
+  for (uint64_t i = 0; i < linesToRead; i++) {
+    destruct_plate(&plates[i]);
+  }
   destruct_manager(&manager_argument);
 }
 
@@ -87,7 +90,8 @@ uint8_t create_threads(uint64_t thread_count, plate_t* plates, uint64_t linesToR
   }
 
   for (size_t i = 0; i < thread_count; i++) {
-    free(private_data[i].plates);
+      free(private_data[i].plates);
+    
   }
   free(private_data);
   free(threads);

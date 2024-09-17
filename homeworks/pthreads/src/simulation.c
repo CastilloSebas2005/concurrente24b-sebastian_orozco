@@ -33,7 +33,6 @@ uint8_t init_simulation(plate_t plate, char *output_path) {
   }
   int64_t totalTime = states * plate.time;
   time_t time_seconds = (time_t)totalTime;
-  make_report(plate.lineReaded, time_seconds, output_path, states);
   return 1;
 }
 
