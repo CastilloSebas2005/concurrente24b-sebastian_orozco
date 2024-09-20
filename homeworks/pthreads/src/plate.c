@@ -43,7 +43,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   char *BinaryFile = malloc(sizeof(char) * index);
 
   // read the line that contains the necesary information to the math part
-  if (sscanf(line_readed, "%s %" SCNd64 " %lf %" SCNd32 " %lf", BinaryFile,
+  if (sscanf(line_readed, "%s %" SCNd64 " %le %" SCNd32 " %le", BinaryFile,
              &Time, &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
     plate->plateM1 = read_binArchive(plate, BinaryFile, subBin);
     plate->plateM2 = copy_matrix(plate->rows, plate->columns, plate->plateM1);

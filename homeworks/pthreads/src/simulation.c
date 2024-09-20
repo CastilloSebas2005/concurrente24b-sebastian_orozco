@@ -17,12 +17,15 @@ char *format_line(char *line);
 void make_report(char *lineReport, time_t time, char *output_path,
                  uint64_t states);
 
-uint8_t init_simulation(plate_t plate, char *output_path) {
+uint64_t init_simulation(plate_t plate) {
   // this is the unique formula that have to aply
   double formula =
       (plate.time * plate.thermal_diffusivity) / (plate.alture * plate.alture);
   double **plate_matrix1 = plate.plateM1;
   double **plate_matrix2 = plate.plateM2;
+  if (!plate_matrix1 && !plate_matrix2) {
+    return 0;
+  }
   uint64_t R = plate.rows;
   uint64_t C = plate.columns;
   double point = plate.sensitivity;
@@ -31,9 +34,7 @@ uint8_t init_simulation(plate_t plate, char *output_path) {
   if (!states) {
     return 0;
   }
-  int64_t totalTime = states * plate.time;
-  time_t time_seconds = (time_t)totalTime;
-  return 1;
+  return states;
 }
 
 uint64_t transfer(double **matrix1, double **matrix2, double formula,
@@ -66,6 +67,29 @@ uint64_t transfer(double **matrix1, double **matrix2, double formula,
   return states;
 }
 
+char *make_line_to_report(char *lineReport, time_t time, uint64_t states){
+  if (!lineReport) {
+    return NULL;
+  }
+   char int_to_char[21];
+   snprintf(int_to_char, sizeof(int_to_char), "%" SCNu64, (uint64_t)states);
+   char timeFormated[48];
+   format_time(time, timeFormated, sizeof(timeFormated));
+   size_t buffer_size = 0;
+   lineReport = format_line(lineReport);
+   for(size_t i = 0; lineReport[i] != '\0'; i++){
+     buffer_size++;
+   }
+   buffer_size += 48 + 21 + 4;
+  char *buffer = (char *)malloc(buffer_size * sizeof(char));
+  if (!buffer) {
+    fprintf(stderr, "Error: can't allocate memory for buffer\n");
+    return NULL;
+  }
+  snprintf(buffer, buffer_size, "%s\t%" SCNu64 "\t%s\n", lineReport, (uint64_t)states, timeFormated);
+  return buffer;
+}
+
 void make_report(char *lineReport, time_t time, char *output_path,
                  uint64_t states) {
   FILE *file = fopen(output_path, "a+");
@@ -92,10 +116,10 @@ void make_report(char *lineReport, time_t time, char *output_path,
 
 // Return parameter text must have at least 48 chars (YYYY/MM/DD hh:mm:ss)
 char *format_time(const time_t seconds, char *text, const size_t capacity) {
-  const struct tm *gmt = gmtime(&seconds);  // NOLINT
-  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year - 70,
-           gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour, gmt->tm_min,
-           gmt->tm_sec);
+  struct tm gmt;
+  gmtime_r(&seconds, &gmt);  // Usar gmtime_r en lugar de gmtime
+  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt.tm_year-70,
+           gmt.tm_mon, gmt.tm_mday-1, gmt.tm_hour, gmt.tm_min, gmt.tm_sec);
   return text;
 }
 
