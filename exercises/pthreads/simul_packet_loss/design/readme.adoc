@@ -1,0 +1,14 @@
+= Design of solution
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:stem:
+:toc:
+:xrefstyle: short
+
+[#pseudocode]
+[source,delphi]
+----
+include::solution.pseudo[]
+----
+

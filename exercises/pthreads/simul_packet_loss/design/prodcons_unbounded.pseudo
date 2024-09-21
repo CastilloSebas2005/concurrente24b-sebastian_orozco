@@ -1,0 +1,33 @@
+// const buffer_capacity = 1024
+
+procedure main(argc, argv[])
+  shared queue := create_queue()
+  // shared can_produce := create_semaphore(buffer_capacity)
+  shared can_access_queue := create_mutex()
+  shared can_consume := create_semaphore(0)
+  create_threads(integer(argv[1]), produce)
+  create_threads(integer(argv[2]), consume)
+end procedure
+
+procedure produce()
+  while true do
+    // wait(can_produce)
+    declare product := create_product()
+    lock(can_access_queue)
+      enqueue(queue, product)
+    unlock(can_access_queue)
+    signal(can_consume)
+  end while
+end procedure
+
+procedure consume()
+  declare counter := 0
+  while true do
+    wait(can_consume)
+    lock(can_access_queue)
+      declare product := dequeue(queue)
+    unlock(can_access_queue)
+    consume_product(product)
+    // signal(can_produce)
+  end while
+end procedure
