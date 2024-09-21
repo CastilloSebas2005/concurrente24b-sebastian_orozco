@@ -22,33 +22,33 @@ Separación de asuntos o tareas, hilos realizando trabajos distintos.
 Capacidad de gestionar varias actividades simultáneamente en un entorno computacional.
 Diversas tareas pueden progresar aparentemente al mismo tiempo, aunque no necesariamente de manera simultánea.
 
-### Paralelismo de datos
+### 5. Paralelismo de datos
 
 Subdividir el conjunto de datos de entrada a un programa, de manera que a cada hilo le corresponda un subconjunto de esos datos.
 Se busca dividir el trabajo en porciones más pequeñas y ejecutar esas porciones al mismo tiempo utilizando múltiples recursos de procesamiento.
 
-### Hilo de ejecución
+### 6. Hilo de ejecución
 
 Es un arreglo de valores que el SO carga en los registros del CPU y permiten ejecutar código en ella. También se les llama trabajadores o hilos.
 Mientras que un programa puede tener un solo hilo (proceso único), la implementación de múltiples hilos permite la ejecución concurrente de diferentes partes del código.
 
-### Indeterminismo
+### 7. Indeterminismo
 
 No se sabe que va a pasar, por ejemplo la programación serial se ejecuta de una forma determinísta, se sabe que la instrucción 1 se ejecuta de primero siempre, luego la 2. Con el indeterminismo es lo contrario, no sigue ese orden, puede ser que se ejecute primero la instrucción 3 y luego la 2.
 Como los hilos trabajan de manera independiente, no se sabe cuando cada hilo va a comenzar su trabajo o cuando va a terminarlo.
 
-### Memoria privada y compartida
+### 8. Memoria privada y compartida
 
 memoria privada: espacio de memoria en que nadie puede acceder, sin mi permiso o el permiso del sistema operativo. Esta se le asigna a los hilos como un struct y cada hilo tiene su memoria privada.
 
 memoria compartida: espacio de memoria que todos pueden acceder, en este caso, todos los hilos tienen acceso a ella, se define como un atributo dentro de la memoria privada, pero todos los hilos pueden acceder a esta memoria compartida y es la misma para cada hilo.
 
-### Espera activa
+### 9. Espera activa
 
 Proceso donde repetidamente se verifica una condición, esto gasta el tiempo de CPU. Es como estar preguntando "¿ya puedo pasar?"
 Ciclo que hace a un hilo de ejecución esperar repetitivamente hasta que una condición se haga falsa.
 
-### Condición de carrera
+### 10. Condición de carrera
 
 Cuando dos o más hilos o procesos quieren acceder al mismo recurso compartido al mismo tiempo y están compitiendo por ese recurso, es como una carrera, el primero que llegue es el que gana, depende del SOS.
 Requisitos para condiciones de carrera:
@@ -59,57 +59,57 @@ Requisitos para condiciones de carrera:
 
 1. escritura en memoria
 
-### Control de concurrencia
+### 11. Control de concurrencia
 
 Mecanismos que permiten controlar la concurrencia, controlando el tiempo de ejecución, un ejemplo de esto es un semáforo, este evita que un hilo haga su trabajo a menos que tenga su respectiva señal de que ya puede pasar a hacerlo.
 
-### Seguridad condicional
+### 12. Seguridad condicional
 
 Es usar memoria compartida sin embargo no todos pueden usarla al mismo tiempo, es como tener una piscina con carriles, todos pueden estar en ella, nadando en diferentes lugares, es útil porque es para evitar condiciones de carrera.
 
 Es evitar el control de la concurrencia, utilizando memoria por ejemplo matrices, arreglos, etc...
 
-### Exclusión mutua
+### 13. Exclusión mutua
 
 Actividad que realiza el SO para evitar que dos o más procesos accedan al mismo tiempo a un área de datos, esto es basicamente lo que hace un mutex o candado, el mutex evita que dos o más hilos accedan a la memoria compartida al mismo tiempo. En nuestro caso, son herramientas para evitar que los hilos accedan a regiones de datos al mismo tiempo.
 
-### Semáforo
+### 14. Semáforo
 
 Un semáforo es un entero con signo que se puede incrementar (signal) y decrementar (wait). Si el signo es negativo, significa que tiene que esperar para poder seguir ejecutando su tarea (el número indica cuantos están esperando) y si es positivo, indica que puede seguir ejecutando sin ninguna espera (el número indica cuantos hilos pueden pasar o seguir hasta que se "ponga en rojo" el semáforo).
 
-### Barrera
+### 15. Barrera
 
 No visto formalmente.
 
-### Variable de condición
+### 16. Variable de condición
 
 No visto formalmente
 
-### Candado de lectura y escritura
+### 17. Candado de lectura y escritura
 
 No visto formalmente
 
-### Descomposición
+### 18. Descomposición
 
 Proceso de dividir una tarea o conjunto de datos en unidades más pequeñas y manejables para su procesamiento concurrente. Esto implica particionar conjuntos de datos entre múltiples hilos o procesos para que cada uno maneje una porción independiente. Se puede ver como si se tuviera una tarea principal que se puede dividir en subtareas más y más pequeñas, es como armar un rompecabezas, se tienen varias piezas que se unen hasta armar una imagen o forma completa. "Divide y vencerás".
 
-### Mapeo
+### 19. Mapeo
 
 Asignación de tareas o datos a recursos de cómputo para aprovechar al máximo el paralelismo disponible. Implica una planificación cuidadosa de la distribución de la carga de trabajo entre los diferentes procesadores, núcleos o nodos en un sistema paralelo o distribuido.
 
-### Incremento de velocidad
+### 21. Incremento de velocidad
 
 Beneficio obtenido al dividir una tarea entre múltiples recursos de procesamiento. Se mide mediante el cociente entre el tiempo que tarda un programa en ejecutarse secuencialmente y el tiempo que toma ejecutar la versión paralela del mismo programa.
 
-### Comunicación punto a punto entre procesos
+### 23. Comunicación punto a punto entre procesos
 
 No visto formalmente
 
-### Comunicación colectiva entre procesos
+### 24. Comunicación colectiva entre procesos
 
 No visto formalmente
 
-### Reducción
+### 25. Reducción
 
 No visto formalmente
 
