@@ -26,6 +26,9 @@ void init_managerArgument(manager_argument_t *manager, char *argv[]) {
     free(jobName);
     return;
   }
+  if (thread_count == 0) {
+    manager->thread_count = sysconf(_SC_NPROCESSORS_ONLN);;
+  }
   free(jobName);
 }
 
@@ -35,6 +38,12 @@ char *get_jobPath(manager_argument_t *manager) {
     fprintf(stderr, "Error: not found jobPath\n");
     return NULL;
   }
+  FILE *file = fopen(manager->jobPath, "r");
+  if (!file) {
+    fprintf(stderr, "Error: the path of the jobfile is incorrect\n");
+    return NULL;
+  }
+  fclose(file);
   return manager->jobPath;
 }
 
@@ -44,24 +53,46 @@ char *get_outputPath(manager_argument_t *manager) {
     fprintf(stderr, "Error: not found outputPath\n");
     return NULL;
   }
+  FILE *file = fopen(manager->outputPath, "w");
+  if (!file) {
+    fprintf(stderr, "Error: the path of the outputfile is incorrect\n");
+    return NULL;
+  }
+  fclose(file);
   return manager->outputPath;
 }
 __uint64_t get_lines_to_read(char *path) {
   FILE *file = fopen(path, "r");
-  if (!file) {  // validate that path exist
-    fprintf(stderr, "Error: can't count the lines\n");
+  if (!file) {  // validate that path exists
+    fprintf(stderr, "Error: can't open the file to count the lines\n");
     return 0;
   }
-  // now count the lines of file
+
+  // Check if the file is empty
+  int first_char = fgetc(file);
+  if (first_char == EOF) {
+    fprintf(stderr, "Error: the file %s is empty\n", path);
+    fclose(file);
+    return 0;
+  }
+
+  // Reset the file pointer to the beginning of the file
+  rewind(file);
+
+  // Now count the lines of the file
   __uint64_t lines = 0;
   char c;
-  // when read the last line the loops ends, save the count and return the lines
   while ((c = fgetc(file)) != EOF) {
     if (c == '\n') {
       lines++;
     }
   }
-  lines++;
+
+  // If the last character is not a newline, add one more line
+  if (first_char != '\n') {
+    lines++;
+  }
+
   fclose(file);
   return lines;
 }
