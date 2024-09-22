@@ -71,7 +71,7 @@ uint64_t transfer(double **matrix1, double **matrix2, double formula,
             matrix2[i][j] + formula * (matrix2[i - 1][j] + matrix2[i][j + 1] +
                                        matrix2[i + 1][j] + matrix2[i][j - 1] -
                                        4 * (matrix2[i][j]));
-        // if the difference is greater than the point 
+        // if the difference is greater than the point
         // then simulation continues
         if ((fabs(matrix1[i][j] - matrix2[i][j]) > point)) {
           limit = true;

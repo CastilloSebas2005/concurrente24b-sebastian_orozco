@@ -76,69 +76,97 @@ end procedure
 
 ``` pseudo
 procedure init_managerArgument(manager, argv[])
-  // Crear la ruta del archivo de job
-  declare path_job as string := make_path(argv[2], argv[1])
-  declare jobName as string := extract_outputName(argv[1])
-  declare path_output as string := make_path(argv[3], jobName)
+  path_job := make_path(argv[2], argv[1])
+  jobName := extract_outputName(argv[1])
+  path_output := make_path(argv[3], jobName)
   manager.jobPath := path_job
   manager.outputPath := path_output
+
+  thread_count := sysconf(_SC_NPROCESSORS_ONLN)
+  if sscanf(argv[4], "%" SCNu64, &thread_count) is 1 then
+    manager.thread_count := thread_count
+  else
+    print "Error: invalid thread count"
+    free jobName
+    return
+  end if
+
+  if thread_count is 0 then
+    manager.thread_count := sysconf(_SC_NPROCESSORS_ONLN)
+  end if
+
+  free jobName
 end procedure
 ```
 
 [plate.pseudo](plate.pseudo)
 
 ``` pseudo
-// inicializando el plate
 procedure init_plate(plate, jobFilePath, subBin, line)
-  declare Time as int64
-  declare Thermal_diffusivity as double
-  declare Alture as int32
-  declare Sensitivity as double
-  open file at path jobFilePath
-  
-  if file don't exist then
-    print error "Error: can't open the file"
-    return 0
+  declare Time, Thermal_diffusivity, Alture, Sensitivity
+  file := open_file(jobFilePath, "r")
+  if file is NULL then
+    print "Error: can't open the file"
+    close_file(file)
+    return 2
   end if
-  
-  read the specified line from the file
-  determine the index where the binary file name ends
-  
-  if line contains valid data then
-    read values from the line (BinaryFile, Time, Thermal_diffusivity, Alture, Sensitivity)
-    
-    plate.plateM1 = read_binArchive(plate, BinaryFile, subBin)
-    plate.plateM2 = copy_matrix(plate.rows, plate.columns, plate.plateM1)
-    
-    store values in plate: Time, Thermal_diffusivity, Alture, Sensitivity, lineReaded
+
+  line_readed := lineToRead(file, line)
+  if line_readed is NULL then
+    plate.blankline := 1
+    close_file(file)
+    return 1
+  end if
+
+  index := 0
+  while line_readed[index] is not ' ' do
+    index := index + 1
+  end while
+  index := index + 1
+
+  BinaryFile := allocate memory for string of size index
+
+  if sscanf(line_readed, "%s %" SCNd64 " %le %" SCNd32 " %le", BinaryFile, &Time, &Thermal_diffusivity, &Alture, &Sensitivity) is 5 then
+    plate.plateM1 := read_binArchive(plate, BinaryFile, subBin)
+    plate.plateM2 := copy_matrix(plate.rows, plate.columns, plate.plateM1)
+    plate.time := Time
+    plate.thermal_diffusivity := Thermal_diffusivity
+    plate.alture := Alture
+    plate.sensitivity := Sensitivity
+    plate.lineReaded := line_readed
+    plate.blankline := 0
   else
-    print error "Error: the values of jobFile are incorrect"
-    return 0
+    print "Error: the values of jobFile are incorrect"
+    free BinaryFile
+    close_file(file)
+    return 2
   end if
-  return 1
+
+  free BinaryFile
+  close_file(file)
+  return 0
 end procedure
 ```
 
 [simulation.pseudo](simulation.pseudo)
 
 ``` pseudo
-procedure init_simulation(plate, output_path)
-  print "entró"
-  // Calcular la fórmula
+procedure init_simulation(plate)
   declare formula as double := (plate.time * plate.thermal_diffusivity) / (plate.alture * plate.alture)
   declare plate_matrix1 as double[][] := plate.plateM1
   declare plate_matrix2 as double[][] := plate.plateM2
-  declare R as uint64_t := plate.rows
-  declare C as uint64_t := plate.colums
-  declare point as double := plate.sensitivity
-  declare states as uint64_t := transfer(plate_matrix1, plate_matrix2, formula, R, C, point)
-  if states = 0 then
+  if plate_matrix1 is NULL and plate_matrix2 is NULL then
     return 0
   end if
-  declare totalTime as int64_t := states * plate.time
-  declare time_seconds as time_t := (time_t)totalTime
-  call make_report(plate.lineReaded, time_seconds, output_path, states)
-  return 1
+  declare R as uint64_t := plate.rows
+  declare C as uint64_t := plate.columns
+  declare point as double := plate.sensitivity
+  declare states as uint64_t := transfer(plate_matrix1, plate_matrix2, formula, R, C, point)
+  if states is 0 then
+    print "Error: can't make the simulation"
+    return 0
+  end if
+  return states
 end procedure
 ```
 
@@ -147,15 +175,15 @@ end procedure
 ``` pseudo
 procedure main(argc, argv[])
   // Valida el número de argumentos
-  if argc = 4 then
+  if argc = 5 then
     print "Welcome"
     // comienza la simulación
     call init_controller(argv)
-  else if argc <= 3 then
-    print "Error: this program needs three arguments to work"
+  else if argc <= 4 then
+    print "Error: this program needs four arguments to work no less"
     return 1
-  else if argc > 3 then
-    print "Error: this program needs three arguments no more (because this is the serial version)"
+  else if argc > 4 then
+    print "Error: this program needs four arguments no more"
     return 2
   end if
   return 0
@@ -165,47 +193,69 @@ end procedure
 [controller.pseudo](controller.pseudo)
 
 ``` pseudo
-procedure init_controller(argv[])
-  // Inicializar manager_argument
-  call init_managerArgument(manager_argument, argv)
+procedure init_controller(argc, argv[])
+  initialize manager_argument with init_managerArgument(argv)
+  jobPath := get_jobPath(manager_argument)
+  output_Path := get_outputPath(manager_argument)
+  thread_count := manager_argument.thread_count
 
-  // Obtener rutas de trabajo y salida
-  declare jobPath as string := path of job file
-  declare output_Path as string := path of output file
-  
-  // Verificar si las rutas son válidas
-  if jobPath is null and output_Path is null then
-    print "Error: can't exist the subdirectory, please try again"
-    return
-  end if
-
-  // Obtener el número de líneas a leer
-  declare linesToRead as uint64_t := get_lines_to_read(jobPath)
-  if linesToRead = 0 then
-    print "Error: something bad in your arguments or jobFile"
+  if jobPath is NULL or output_Path is NULL then
     call destruct_manager(manager_argument)
     return
   end if
 
-  // arreglo de plates
-  declare plates[linesToRead] as plate_t
-  print linesToRead
+  linesToRead := get_lines_to_read(jobPath)
+  if linesToRead is 0 then
+    call destruct_manager(manager_argument)
+    return
+  end if
 
-  // Inicializar y simular cada plate
-  for i := 0 to linesToRead - 1 do
-    declare error1 as uint8_t := init_plate(plates[i], jobPath, argv[2], i)
-    if error1 = 0 then
-      print "Error: line of jobfile is blank or corrupt"
-      return
-    end if
+  shared_data := allocate memory for shared_data_t
+  shared_data.line_report := allocate memory for array of linesToRead texts
 
-    declare error2 as uint8_t := init_simulation(plates[i], output_Path)
-    call destruct_plate(plates[i])
-    if error2 = 0 then
-      print "Error: something bad in the simulation"
+  plates := array of linesToRead plates
+  for i from 0 to linesToRead - 1 do
+    call init_plate(plates[i], jobPath, argv[2], i)
+  end for
+
+  if thread_count is 1 then
+    for i from 0 to linesToRead - 1 do
+      if plates[i].blankline is 0 then
+        states := init_simulation(plates[i])
+        line := make_line_to_report(plates[i].lineReaded, plates[i].time * states, states)
+        shared_data.line_report[i] := line
+        print "Plate number: " + i + " calculated correctly..."
+      end if
+    end for
+  else
+    call create_threads(thread_count, plates, linesToRead, shared_data)
+  end if
+
+  error := make_report(shared_data.line_report, output_Path, linesToRead)
+  if error is 0 then
+    print "The report was created successfully"
+    for i from 0 to linesToRead - 1 do
+      if shared_data.line_report[i] is not NULL then
+        print shared_data.line_report[i]
+      end if
+    end for
+  end if
+
+  for i from 0 to linesToRead - 1 do
+    if plates[i].blankline is 0 then
+      call destruct_plate(plates[i])
     end if
   end for
 
+  for i from 0 to linesToRead - 1 do
+    if shared_data.line_report[i] is not NULL then
+      free shared_data.line_report[i]
+    end if
+  end for
+
+  free shared_data.line_report
+  free shared_data
+  call destruct_manager(manager_argument)
 end procedure
 ```
 

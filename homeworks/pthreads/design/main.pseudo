@@ -1,14 +1,14 @@
 procedure main(argc, argv[])
   // Valida el número de argumentos
-  if argc = 4 then
+  if argc = 5 then
     print "Welcome"
     // comienza la simulación
     call init_controller(argv)
-  else if argc <= 3 then
-    print "Error: this program needs three arguments to work"
+  else if argc <= 4 then
+    print "Error: this program needs four arguments to work no less"
     return 1
-  else if argc > 3 then
-    print "Error: this program needs three arguments no more (because this is the serial version)"
+  else if argc > 4 then
+    print "Error: this program needs four arguments no more"
     return 2
   end if
   return 0

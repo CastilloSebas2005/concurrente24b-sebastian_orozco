@@ -55,7 +55,7 @@ void create_threads(uint64_t thread_count, plate_t *plates,
 /// @param data This is the private data of threads
 /// @return NULL
 void *work(void *data);
-uint8_t make_report(char **report, char *output_path);
+uint8_t make_report(char **report, char *output_path, uint64_t linesToRead);
 
 void init_controller(char *argv[]) {
   manager_argument_t manager_argument;
@@ -77,13 +77,8 @@ void init_controller(char *argv[]) {
       (shared_data_t *)calloc(1, sizeof(shared_data_t));
   shared_data->line_report = (char **)calloc(linesToRead, sizeof(char *));
   plate_t plates[linesToRead]; // NOLINT
-  printf("%li", linesToRead);
   for (uint64_t i = 0; i < linesToRead; i++) {
     init_plate(&plates[i], jobPath, argv[2], i);
-  }
-  for (uint64_t i = 0; i < linesToRead; i++) {
-    printf("Plate number: %" SCNu64 ", have blankline %" SCNu8 "\n", i,
-           plates[i].blankline);
   }
   /// @note this is to manage the threads correctly
   /// because if the number of threads is 1, then the program
@@ -103,9 +98,14 @@ void init_controller(char *argv[]) {
     // Execute in multiple threads
     create_threads(thread_count, plates, linesToRead, shared_data);
   }
-  uint8_t error = make_report(shared_data->line_report, output_Path);
+  uint8_t error = make_report(shared_data->line_report, output_Path, linesToRead);
   if (!error) {
     printf("The report was created successfully\n");
+    for (uint64_t i = 0; i < linesToRead; i++) {
+      if (shared_data->line_report[i]) {
+        printf("%s\n", shared_data->line_report[i]);
+      }
+    }
   }
   for (uint64_t i = 0; i < linesToRead; i++) {
     if (plates[i].blankline == 0) {
@@ -134,7 +134,9 @@ void create_threads(uint64_t thread_count, plate_t *plates,
     return;
   }
 
+  /// @note this is to divide the work of threads
   uint64_t workDivision = linesToRead / thread_count;
+  /// @note this is to know if the division is exact
   uint64_t remainder = linesToRead % thread_count;
   // Create the private data for each thread and assign the plates
   for (size_t i = 0; i < thread_count; i++) {
@@ -157,9 +159,12 @@ void create_threads(uint64_t thread_count, plate_t *plates,
   }
 
   size_t plateIndex = 0;
+  /// @note this is to assign the plates to each thread
   for (size_t i = 0; i < thread_count; i++) {
     for (size_t j = 0; j < private_data[i].linesToRead; j++) {
       if (!plates[j].blankline) {
+        /// @note this is to assign the line to write in the shared data
+        /// this is to use the condition safe technique
         private_data[i].lines_to_write[j] = plateIndex;
         private_data[i].plates[j] = plates[plateIndex];
       }
@@ -197,6 +202,8 @@ void *work(void *data) {
       if (line || states != 0) {
         printf("Plate number: %" SCNu64 " calculate correctly...\n",
                private_data->lines_to_write[i]);
+        /// @note this is to write the line in the shared data
+        /// and not perturb the other threads
         private_data->shared_data
             ->line_report[private_data->lines_to_write[i]] = line;
       }
@@ -205,7 +212,7 @@ void *work(void *data) {
   return NULL;
 }
 
-uint8_t make_report(char **report, char *output_path) {
+uint8_t make_report(char **report, char *output_path, uint64_t linesToRead) {
   if (!report && !output_path) {
     fprintf(stderr, "Error: can't make the report\n");
     return 1;
@@ -216,8 +223,10 @@ uint8_t make_report(char **report, char *output_path) {
             output_path);
     return 1;
   }
-  for (size_t i = 0; report[i] != NULL; i++) {
-    fputs(report[i], file);
+  for (uint64_t i = 0; i < linesToRead; i++) {
+    if (report[i]) {
+      fputs(report[i], file);
+    }
   }
   fclose(file);
   return 0;
