@@ -73,6 +73,10 @@ void init_controller(char *argv[]) {
     destruct_manager(&manager_argument);
     return;
   }
+  if(thread_count == 0){
+    destruct_manager(&manager_argument);
+    return;
+  }
   shared_data_t *shared_data =
       (shared_data_t *)calloc(1, sizeof(shared_data_t));
   shared_data->line_report = (char **)calloc(linesToRead, sizeof(char *));
@@ -101,11 +105,6 @@ void init_controller(char *argv[]) {
   uint8_t error = make_report(shared_data->line_report, output_Path, linesToRead);
   if (!error) {
     printf("The report was created successfully\n");
-    for (uint64_t i = 0; i < linesToRead; i++) {
-      if (shared_data->line_report[i]) {
-        printf("%s\n", shared_data->line_report[i]);
-      }
-    }
   }
   for (uint64_t i = 0; i < linesToRead; i++) {
     if (plates[i].blankline == 0) {
@@ -217,7 +216,7 @@ uint8_t make_report(char **report, char *output_path, uint64_t linesToRead) {
     fprintf(stderr, "Error: can't make the report\n");
     return 1;
   }
-  FILE *file = fopen(output_path, "a+");
+  FILE *file = fopen(output_path, "w");
   if (!file) {
     fprintf(stderr, "Error: can't create report, change your directory %s\n",
             output_path);

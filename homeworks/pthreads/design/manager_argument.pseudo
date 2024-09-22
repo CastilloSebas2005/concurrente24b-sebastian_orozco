@@ -42,14 +42,6 @@ procedure get_outputPath(manager)
     print "Error: not found outputPath"
     return NULL
   end if
-
-  file := open_file(manager.outputPath, "w")
-  if file is NULL then
-    print "Error: the path of the outputfile is incorrect"
-    return NULL
-  end if
-
-  close_file(file)
   return manager.outputPath
 end procedure
 

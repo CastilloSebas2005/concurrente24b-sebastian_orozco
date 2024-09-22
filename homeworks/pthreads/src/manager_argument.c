@@ -22,6 +22,7 @@ void init_managerArgument(manager_argument_t *manager, char *argv[]) {
   if (sscanf(argv[4], "%" SCNu64, &thread_count) == 1) {
     manager->thread_count = thread_count;
   } else {
+    manager->thread_count = 0;
     fprintf(stderr, "Error: invalid thread count\n");
     free(jobName);
     return;
@@ -35,7 +36,7 @@ void init_managerArgument(manager_argument_t *manager, char *argv[]) {
 char *get_jobPath(manager_argument_t *manager) {
   // to valitate jobPath exist
   if (!manager->jobPath) {
-    fprintf(stderr, "Error: not found jobPath\n");
+    fprintf(stderr, "Error: jobpath is NULL\n");
     return NULL;
   }
   FILE *file = fopen(manager->jobPath, "r");
@@ -53,12 +54,6 @@ char *get_outputPath(manager_argument_t *manager) {
     fprintf(stderr, "Error: not found outputPath\n");
     return NULL;
   }
-  FILE *file = fopen(manager->outputPath, "w");
-  if (!file) {
-    fprintf(stderr, "Error: the path of the outputfile is incorrect\n");
-    return NULL;
-  }
-  fclose(file);
   return manager->outputPath;
 }
 __uint64_t get_lines_to_read(char *path) {
