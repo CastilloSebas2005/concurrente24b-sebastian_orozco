@@ -261,8 +261,8 @@ end procedure
 
 ## Memory Diagram
 
-Este es un diagrama de como se vería la memoria, no se quiere hacer exacto, pues sería muy difícil ya que en tiempo de compilación el tamaño de muchas variables es asignado, entonces depende de la arquitectura de la computadora donde se esté corriendo.
+Este es un diagrama de como se vería la memoria, no se quiere hacer exacto, pues sería muy difícil ya que en tiempo de compilación el tamaño de muchas variables es asignado, entonces depende de la arquitectura de la computadora donde se esté corriendo incluso, la cantidad de hilos y trabajo para cada hilo es asignado en tiempo de compilación.
 
-Cabe recalcar que el diagrama no es exacto, simplemente es una represente una aproximación a como se está usando la memoria, se tomó de referencia el de la página de jeisson simplemente se adapto a este trabajo, solo hay un mainthread, no se están creando más debido a que el programa es 100% serial.
+Cabe recalcar que el diagrama no es exacto, simplemente es una represente una aproximación a como se está usando la memoria, se tomó de referencia el de la página de jeisson simplemente se adapto a este trabajo. Recordar que la cantidad de hilos es pasada por el argumento, por lo que hay n threads en el stack, esto es simplemente representativo ya que cada hilo ocupa un stack frame.
 
 ![MemoryDiagram.png](MemoryDiagram.png)
