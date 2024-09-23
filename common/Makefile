@@ -263,7 +263,7 @@ tsan: $(INPUTFC)
 	cc -g -Wall -Wextra -fsanitize=thread $(INPUTFC) -o $(EXEARGS) -pthread
 
 ubsan: $(INPUTFC)
-	cc -g -Wall -Wextra -fsanitize=undefined $(INPUTFC) -o $(EXEARGS) -pthreadA
+	cc -g -Wall -Wextra -fsanitize=undefined $(INPUTFC) -o $(EXEARGS) -pthread
 
 .gitignore:  ## Generate a .gitignore file
 	echo $(IGNORES) | tr " " "\n" > .gitignore
