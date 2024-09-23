@@ -73,7 +73,7 @@ void init_controller(char *argv[]) {
     destruct_manager(&manager_argument);
     return;
   }
-  if(thread_count == 0){
+  if (thread_count == 0) {
     destruct_manager(&manager_argument);
     return;
   }
@@ -102,7 +102,8 @@ void init_controller(char *argv[]) {
     // Execute in multiple threads
     create_threads(thread_count, plates, linesToRead, shared_data);
   }
-  uint8_t error = make_report(shared_data->line_report, output_Path, linesToRead);
+  uint8_t error =
+      make_report(shared_data->line_report, output_Path, linesToRead);
   if (!error) {
     printf("The report was created successfully\n");
   }
