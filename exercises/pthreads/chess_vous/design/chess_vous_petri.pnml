@@ -46,11 +46,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>Referee</text>
         <graphics>
-          <offset x="240" y="280"/>
+          <offset x="230" y="280"/>
         </graphics>
       </name>
       <graphics>
-        <position x="240" y="240"/>
+        <position x="230" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -70,11 +70,11 @@ Manual editing may break compatibility.-->
       <name>
         <text/>
         <graphics>
-          <offset x="670" y="130"/>
+          <offset x="820" y="130"/>
         </graphics>
       </name>
       <graphics>
-        <position x="670" y="90"/>
+        <position x="820" y="90"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -94,23 +94,23 @@ Manual editing may break compatibility.-->
       <name>
         <text/>
         <graphics>
-          <offset x="670" y="460"/>
+          <offset x="820" y="460"/>
         </graphics>
       </name>
       <graphics>
-        <position x="670" y="420"/>
+        <position x="820" y="420"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
     <place id="p9">
       <name>
-        <text>players_ready</text>
+        <text/>
         <graphics>
-          <offset x="430" y="280"/>
+          <offset x="400" y="280"/>
         </graphics>
       </name>
       <graphics>
-        <position x="430" y="240"/>
+        <position x="400" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -118,11 +118,11 @@ Manual editing may break compatibility.-->
       <name>
         <text/>
         <graphics>
-          <offset x="620" y="280"/>
+          <offset x="770" y="280"/>
         </graphics>
       </name>
       <graphics>
-        <position x="620" y="240"/>
+        <position x="770" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -130,11 +130,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>player2_ready</text>
         <graphics>
-          <offset x="420" y="370"/>
+          <offset x="400" y="390"/>
         </graphics>
       </name>
       <graphics>
-        <position x="420" y="330"/>
+        <position x="400" y="350"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -142,11 +142,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>player1_ready</text>
         <graphics>
-          <offset x="450" y="200"/>
+          <offset x="430" y="190"/>
         </graphics>
       </name>
       <graphics>
-        <position x="450" y="160"/>
+        <position x="430" y="150"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -154,11 +154,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>clock_ready</text>
         <graphics>
-          <offset x="570" y="220"/>
+          <offset x="720" y="220"/>
         </graphics>
       </name>
       <graphics>
-        <position x="570" y="180"/>
+        <position x="720" y="180"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -166,11 +166,23 @@ Manual editing may break compatibility.-->
       <name>
         <text>clock_ready</text>
         <graphics>
-          <offset x="560" y="320"/>
+          <offset x="720" y="320"/>
         </graphics>
       </name>
       <graphics>
-        <position x="560" y="280"/>
+        <position x="720" y="280"/>
+        <dimension x="40" y="40"/>
+      </graphics>
+    </place>
+    <place id="p16">
+      <name>
+        <text>players_ready</text>
+        <graphics>
+          <offset x="560" y="280"/>
+        </graphics>
+      </name>
+      <graphics>
+        <position x="560" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
     </place>
@@ -178,11 +190,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>play_chess</text>
         <graphics>
-          <offset x="570" y="130"/>
+          <offset x="720" y="130"/>
         </graphics>
       </name>
       <graphics>
-        <position x="570" y="90"/>
+        <position x="720" y="90"/>
         <dimension x="40" y="40"/>
       </graphics>
       <toolspecific tool="WoPeD" version="1.0">
@@ -195,11 +207,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>join</text>
         <graphics>
-          <offset x="810" y="280"/>
+          <offset x="960" y="280"/>
         </graphics>
       </name>
       <graphics>
-        <position x="810" y="240"/>
+        <position x="960" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
       <toolspecific tool="WoPeD" version="1.0">
@@ -229,11 +241,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>play_chess</text>
         <graphics>
-          <offset x="520" y="460"/>
+          <offset x="670" y="460"/>
         </graphics>
       </name>
       <graphics>
-        <position x="520" y="420"/>
+        <position x="670" y="420"/>
         <dimension x="40" y="40"/>
       </graphics>
       <toolspecific tool="WoPeD" version="1.0">
@@ -246,11 +258,11 @@ Manual editing may break compatibility.-->
       <name>
         <text>enter_room</text>
         <graphics>
-          <offset x="340" y="280"/>
+          <offset x="310" y="280"/>
         </graphics>
       </name>
       <graphics>
-        <position x="340" y="240"/>
+        <position x="310" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
       <toolspecific tool="WoPeD" version="1.0">
@@ -263,11 +275,28 @@ Manual editing may break compatibility.-->
       <name>
         <text>set_clock</text>
         <graphics>
-          <offset x="510" y="280"/>
+          <offset x="660" y="280"/>
         </graphics>
       </name>
       <graphics>
-        <position x="510" y="240"/>
+        <position x="660" y="240"/>
+        <dimension x="40" y="40"/>
+      </graphics>
+      <toolspecific tool="WoPeD" version="1.0">
+        <time>0</time>
+        <timeUnit>1</timeUnit>
+        <orientation>1</orientation>
+      </toolspecific>
+    </transition>
+    <transition id="t10">
+      <name>
+        <text>is_players_ready</text>
+        <graphics>
+          <offset x="470" y="280"/>
+        </graphics>
+      </name>
+      <graphics>
+        <position x="470" y="240"/>
         <dimension x="40" y="40"/>
       </graphics>
       <toolspecific tool="WoPeD" version="1.0">
@@ -366,6 +395,20 @@ Manual editing may break compatibility.-->
         <displayProbabilityPosition x="500.0" y="12.0"/>
       </toolspecific>
     </arc>
+    <arc id="a34" source="t8" target="p9">
+      <inscription>
+        <text>1</text>
+        <graphics>
+          <offset x="500.0" y="-12.0"/>
+        </graphics>
+      </inscription>
+      <graphics/>
+      <toolspecific tool="WoPeD" version="1.0">
+        <probability>1.0</probability>
+        <displayProbabilityOn>false</displayProbabilityOn>
+        <displayProbabilityPosition x="500.0" y="12.0"/>
+      </toolspecific>
+    </arc>
     <arc id="a15" source="p8" target="t5">
       <inscription>
         <text>1</text>
@@ -381,20 +424,6 @@ Manual editing may break compatibility.-->
       </toolspecific>
     </arc>
     <arc id="a14" source="t7" target="p8">
-      <inscription>
-        <text>1</text>
-        <graphics>
-          <offset x="500.0" y="-12.0"/>
-        </graphics>
-      </inscription>
-      <graphics/>
-      <toolspecific tool="WoPeD" version="1.0">
-        <probability>1.0</probability>
-        <displayProbabilityOn>false</displayProbabilityOn>
-        <displayProbabilityPosition x="500.0" y="12.0"/>
-      </toolspecific>
-    </arc>
-    <arc id="a17" source="t8" target="p9">
       <inscription>
         <text>1</text>
         <graphics>
@@ -436,7 +465,7 @@ Manual editing may break compatibility.-->
         <displayProbabilityPosition x="500.0" y="12.0"/>
       </toolspecific>
     </arc>
-    <arc id="a18" source="p9" target="t9">
+    <arc id="a83" source="p12" target="t10">
       <inscription>
         <text>1</text>
         <graphics>
@@ -478,6 +507,20 @@ Manual editing may break compatibility.-->
         <displayProbabilityPosition x="500.0" y="12.0"/>
       </toolspecific>
     </arc>
+    <arc id="a66" source="t10" target="p16">
+      <inscription>
+        <text>1</text>
+        <graphics>
+          <offset x="500.0" y="-12.0"/>
+        </graphics>
+      </inscription>
+      <graphics/>
+      <toolspecific tool="WoPeD" version="1.0">
+        <probability>1.0</probability>
+        <displayProbabilityOn>false</displayProbabilityOn>
+        <displayProbabilityPosition x="500.0" y="12.0"/>
+      </toolspecific>
+    </arc>
     <arc id="a21" source="t3" target="p11">
       <inscription>
         <text>1</text>
@@ -492,7 +535,23 @@ Manual editing may break compatibility.-->
         <displayProbabilityPosition x="500.0" y="12.0"/>
       </toolspecific>
     </arc>
-    <arc id="a24" source="p11" target="t9">
+    <arc id="a65" source="p9" target="t10">
+      <inscription>
+        <text>1</text>
+        <graphics>
+          <offset x="500.0" y="-12.0"/>
+        </graphics>
+      </inscription>
+      <graphics>
+        <position x="439" y="259"/>
+      </graphics>
+      <toolspecific tool="WoPeD" version="1.0">
+        <probability>1.0</probability>
+        <displayProbabilityOn>false</displayProbabilityOn>
+        <displayProbabilityPosition x="500.0" y="12.0"/>
+      </toolspecific>
+    </arc>
+    <arc id="a68" source="p11" target="t10">
       <inscription>
         <text>1</text>
         <graphics>
@@ -506,7 +565,7 @@ Manual editing may break compatibility.-->
         <displayProbabilityPosition x="500.0" y="12.0"/>
       </toolspecific>
     </arc>
-    <arc id="a23" source="p12" target="t9">
+    <arc id="a67" source="p16" target="t9">
       <inscription>
         <text>1</text>
         <graphics>
@@ -556,7 +615,7 @@ Manual editing may break compatibility.-->
         </graphics>
       </inscription>
       <graphics>
-        <position x="568" y="218"/>
+        <position x="718" y="218"/>
       </graphics>
       <toolspecific tool="WoPeD" version="1.0">
         <probability>1.0</probability>
@@ -696,7 +755,7 @@ Manual editing may break compatibility.-->
         <dimension x="1899" y="799"/>
       </bounds>
       <scale>100</scale>
-      <treeWidthRight>1532</treeWidthRight>
+      <treeWidthRight>1579</treeWidthRight>
       <overviewPanelVisible>true</overviewPanelVisible>
       <treeHeightOverview>100</treeHeightOverview>
       <treePanelVisible>true</treePanelVisible>

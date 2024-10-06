@@ -11,15 +11,22 @@ end procedure
 
 procedure player1()
   enter_room()
+  signal(player1_ready)
+  wait(clock_ready)
   play_chess()
 end procedure
 
 procedure player2()
   enter_room()
+  signal(player2_ready)
+  wait(clock_ready)
   play_chess()
 end procedure
 
 procedure referee()
   enter_room()
+  is_players_ready()
+  wait(players_ready)
   set_clock()
-end procedures
+  signal(clock_ready)
+end procedure
