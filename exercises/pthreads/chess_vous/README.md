@@ -4,6 +4,7 @@ En un torneo de ajedrez los participantes efectúan el siguiente itinerario trad
 
 El problema se considera resuelto si el árbitro establece el reloj sólo hasta que los dos jugadores hayan ingresado al centro deportivo (enter_room) y los jugadores juegan (play_chess) hasta que el árbitro haya establecido el reloj (set_clock). Considere el siguiente código inicial que trata de representar el escenario descrito.
 
+``` pseudo
 procedure main()
   shared player1_ready := semaphore(0)
   shared player2_ready := semaphore(0)
@@ -24,6 +25,7 @@ procedure player2()
   enter_room()
   play_chess()
 end procedure
+```
 
 procedure referee()
   enter_room()
