@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "omp_for"
+PROJECT_BRIEF = "Ejemplo comentado sobre omp for"
