@@ -1,0 +1,71 @@
+= Reporte de optimizaciones
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem: latexmath
+:toc:
+:xrefstyle: short
+
+
+
+[[serial_optimizations]]
+== Optimizaciones seriales
+
+[%autowidth.stretch,options="header"]
+|===
+|Iter. |Etiqueta |Duración (s) |_Speedup_ |Descripción corta
+|0 |Serial0 | |1.00 |Versión serial inicial (Tarea01)
+|1 | | | |
+|2 | | | |
+|===
+
+
+[[serial_iter00]]
+=== Versión serial original (Tarea01)
+
+#Describa aquí qué aspectos tenía la versión serial no eficientes que podrían o fueron opitimizados luego. También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización.#
+
+
+[[serial_iter01]]
+=== Iteración 1
+
+#Para cada iteración del ciclo de optimización, cree una subsección como esta. Resuma en máximo un párrafo en qué consiste la optimización. Su objetivo es que quien lea este documento entienda claramente qué se intentó mejorar. Provea trocitos de código fuente o pseudocódigo que ayude a entender la optimización potencial. Indique si el intento logró incrementar el desempeño. En caso de no lograrlo, conjeture la causa. Eso ayudaría a ahorrar tiempo a otras personas que tengan la misma inquietud.#
+
+
+
+
+[[concurrent_optimizations]]
+== Optimizaciones concurrentes
+
+[%autowidth.stretch,options="header"]
+|===
+|Iter. |Etiqueta |Duración (s) |_Speedup_ |Eficiencia |Descripción corta
+|- |SerialI | |1.00 |1.00 |Versión serial final
+|1 |Conc0 | | | |Versión concurrente inicial (Tarea02)
+|2 | | | | |
+|3 | | | | |Versión concurrente final
+|===
+
+
+[[conc_iter00]]
+=== Versión concurrente inicial (Tarea02)
+
+#Describa aquí qué aspectos tenía la versión concurrente (Tarea02) no eficientes que podrían o fueron opitimizados luego. También aspectos que usted considera eficientes, los cuales explicarían por qué no amerita una optimización.#
+
+[[conc_iter01]]
+=== Iteración 1
+
+#Para cada iteración del ciclo de optimización, cree una subsección como esta. Resuma en máximo un párrafo en qué consiste la optimización. Su objetivo es que quien lea este documento entienda claramente qué se intentó mejorar. Provea trocitos de código fuente o pseudocódigo que ayude a entender la optimización potencial. Indique si el intento logró incrementar el desempeño. En caso de no lograrlo, conjeture la causa. Eso ayudaría a ahorrar tiempo a otras personas que tengan la misma inquietud.#
+
+
+[[optimization_comparison]]
+=== Comparación de optimizaciones
+
+(pendiente)
+
+
+[[concurrency_comparison]]
+=== Comparación del grado de concurrencia
+
+(pendiente)
