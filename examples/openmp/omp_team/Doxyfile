@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "omp_team"
+PROJECT_BRIEF = "Ejemplo comentado sobre omp team"
