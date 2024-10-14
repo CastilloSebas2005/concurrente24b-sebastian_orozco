@@ -15,7 +15,7 @@
 [%autowidth.stretch,options="header"]
 |===
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Descripción corta
-|0 |Serial0 | |1.00 |Versión serial inicial (Tarea01)
+|0 |Serial0 |20.156536593 |1.00 |Versión serial inicial (Tarea01)
 |1 | | | |
 |2 | | | |
 |===
