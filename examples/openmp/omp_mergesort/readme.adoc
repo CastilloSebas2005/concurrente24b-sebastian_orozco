@@ -51,7 +51,7 @@ If `threads` argument is provided, the vector will be sorted in parallel for tha
 
 If `verbose` is `0`, no output is generated at all (quiet), useful for benchmarking. Value `1` stands for verbose mode.
 
-[[diferencia de duraciones]]
+[[diferencia_de_duraciones]]
 === Diferencia de duraciones
 
 Se corrió el programa bajo los siguientes parámetros para hacer la comparación, sin embargo si se aumentan los hilos la versión paralela es probable que sea más rápida
