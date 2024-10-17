@@ -1,0 +1,61 @@
+= Project name
+:experimental:
+:nofooter:
+:source-highlighter: pygments
+:sectnums:
+:stem:
+:toc:
+:xrefstyle: short
+
+
+[[problem_statement]]
+== Problem statement
+
+Sort an array of values using parallelized merge-sort algorithm.
+
+Input example:
+
+[source]
+----
+include::tests/input001.txt[]
+----
+
+Output example:
+
+[source]
+----
+include::tests/output001.txt[]
+----
+
+[[user_manual]]
+== User manual
+
+[[build]]
+=== Build
+
+Use one of the following:
+
+- Run `make` to build an executable for debugging.
+- Run `make release` to build an optimized executable.
+
+[[usage]]
+=== Usage
+
+Usage: `bin/mergesort [count] [threads] [verbose]`
+
+If run with no command line arguments, the program will sort the values given by standard input and printed to standard output separated by spaces.
+
+If the `count` argument is provided, a random vector of count pseudo-random elements is created and sorted, no output is generated unless the `verbose` argument is provided with value `1`.
+
+If `threads` argument is provided, the vector will be sorted in parallel for that number of threads, otherwise the number of available CPU will be used.
+
+If `verbose` is `0`, no output is generated at all (quiet), useful for benchmarking. Value `1` stands for verbose mode.
+
+[[Diferencia de duraciones]]
+=== Duraciones
+
+Se corrió el programa bajo los siguientes parámetros para hacer la comparación, sin embargo si se aumentan los hilos la versión paralela es probable que sea más rápida
+perf stat bin/omp_mergesort 50000000 8 0
+
+Versión serial: 42.855164196 segundos
+Versión paralela 8 hilos:  10.216468027
