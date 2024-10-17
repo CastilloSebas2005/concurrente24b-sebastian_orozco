@@ -9,6 +9,7 @@
 double **makeMatrix(uint64_t R, uint64_t C);
 double **read_binArchive(plate_t *plate, char *binName, char *subBin);
 double **copy_matrix(uint64_t R, uint64_t C, double **matrixOriginal);
+double *arrayToMatrix(double **matrix, uint64_t R, uint64_t C);
 void freeMatrix(double **Matrix, uint64_t R);
 char *lineToRead(FILE *file, uint64_t line);
 uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
@@ -45,6 +46,8 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
              &Time, &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
     plate->plateM1 = read_binArchive(plate, BinaryFile, subBin);
     plate->plateM2 = copy_matrix(plate->rows, plate->columns, plate->plateM1);
+    plate->arrayM1 = arrayToMatrix(plate->plateM1, plate->rows, plate->columns);
+    plate->arrayM2 = arrayToMatrix(plate->plateM2, plate->rows, plate->columns);
     plate->time = Time;
     plate->thermal_diffusivity = Thermal_diffusivity;
     plate->alture = Alture;
@@ -113,13 +116,6 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
       }
     }
   }
-  // to print matrix
-  for (uint64_t i = 0; i < R; i++) {
-    for (uint64_t j = 0; j < C; j++) {
-      printf("%f ", matrix[i][j]);
-    }
-    printf("\n");
-  }
   free(pathBin);
   fclose(file);
   return matrix;
@@ -150,6 +146,20 @@ double **makeMatrix(uint64_t R, uint64_t C) {
     }
   }
   return matrix;
+}
+
+double *arrayToMatrix(double **matrix, uint64_t R, uint64_t C) {
+  double *array = (double *)malloc(R * C * sizeof(double));
+  if (!array) {
+    fprintf(stderr,"Error: can't make the array\n");
+    return NULL;
+  }
+  for (uint64_t i = 0; i < R; i++) {
+    for (uint64_t j = 0; j < C; j++) {
+      array[i * C + j] = matrix[i][j];
+    }
+  }
+  return array;
 }
 
 /// @brief to liberate memory from a matrix of dinamic memory
@@ -230,6 +240,8 @@ double **copy_matrix(uint64_t R, uint64_t C, double **matrixOriginal) {
 uint8_t destruct_plate(plate_t *plate) {
   freeMatrix(plate->plateM1, plate->rows);
   freeMatrix(plate->plateM2, plate->rows);
+  free(plate->arrayM1);
+  free(plate->arrayM2);
   free(plate->lineReaded);
   return 0;
 }

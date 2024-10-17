@@ -15,8 +15,8 @@
 [%autowidth.stretch,options="header"]
 |===
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Descripción corta
-|0 |Serial0 |20.156536593 |1.00 |Versión serial inicial (Tarea01)
-|1 | | | |
+|0 |Serial0 |10851.628528535 |1.00 |Versión serial inicial (Tarea01)
+|1 |Serial1 |9812.5760090000 |1.11 |Versión serial creación de arreglos y copias de memoria directas (Tarea03)
 |2 | | | |
 |===
 
@@ -41,9 +41,9 @@
 [%autowidth.stretch,options="header"]
 |===
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Eficiencia |Descripción corta
-|- |SerialI | |1.00 |1.00 |Versión serial final
-|1 |Conc0 | | | |Versión concurrente inicial (Tarea02)
-|2 | | | | |
+|- |SerialI |9812.5760090000 |1.00 |1.00 |Versión serial final
+|1 |Conc0 |5589.1285985670 |1.75| |Versión concurrente inicial (Tarea02)
+|2 |Conc1 |3058.295840424 |3.21| |Versión concurrente con las optimizaciones de la serial final
 |3 | | | | |Versión concurrente final
 |===
 

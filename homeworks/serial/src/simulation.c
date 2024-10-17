@@ -5,29 +5,53 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include <time.h>
-#include "simulation.h"
+
 #include "plate.h"
+#include "simulation.h"
 
 char *format_time(const time_t seconds, char *text, const size_t capacity);
-uint64_t transfer(double **matrix1, double **matrix2, double formula,
-                  uint64_t R, uint64_t C, double point);
+
+/// @brief This is the part of math of the simulation
+/// @param matrix1 Matrix 1
+/// @param matrix2 Matrix 2
+/// @param formula formula to apply
+/// @param R Rows
+/// @param C Columns
+/// @param point Thermal sensitivity
+/// @return the number of states
+uint64_t transfer1(double *matrix1, double *matrix2, double formula, uint64_t R,
+                   uint64_t C, double point);
+
+uint64_t transfer2(double *matrix1, double *matrix2, double formula, uint64_t R,
+                   uint64_t C, double point);
+
+/// @brief This function format the line
+/// @param line line to format
+/// @return the line formated
 char *format_line(char *line);
 
+/// @brief This function make the report
+/// @param lineReport Line to report
+/// @param time Time of simulation
+/// @param output_path Path of report
+/// @param states Number of states
 void make_report(char *lineReport, time_t time, char *output_path,
                  uint64_t states);
+
+void update_plate(double *matrix1, double *matrix2, size_t matrix_size);
 
 uint8_t init_simulation(plate_t plate, char *output_path) {
   // this is the unique formula that have to aply
   double formula =
       (plate.time * plate.thermal_diffusivity) / (plate.alture * plate.alture);
-  double **plate_matrix1 = plate.plateM1;
-  double **plate_matrix2 = plate.plateM2;
+  double *array1 = plate.arrayM1;
+  double *array2 = plate.arrayM2;
   uint64_t R = plate.rows;
   uint64_t C = plate.columns;
   double point = plate.sensitivity;
-  uint64_t states =
-      transfer(plate_matrix1, plate_matrix2, formula, R, C, point);
+  uint64_t states = transfer1(array1, array2, formula, R, C, point);
   if (!states) {
     return 0;
   }
@@ -37,30 +61,34 @@ uint8_t init_simulation(plate_t plate, char *output_path) {
   return 1;
 }
 
-uint64_t transfer(double **matrix1, double **matrix2, double formula,
-                  uint64_t R, uint64_t C, double point) {
+uint64_t transfer1(double *matrix1, double *matrix2, double formula, uint64_t R,
+                   uint64_t C, double point) {
   if (!matrix1 && !matrix2) {
     return 0;
   }
   uint64_t states = 0;
   bool limit = true;
+  double up, down, left, right, center;
   while (limit) {
     limit = false;
     for (uint64_t i = 1; i < R - 1; i++) {
       for (uint64_t j = 1; j < C - 1; j++) {
-        matrix1[i][j] =
-            matrix2[i][j] + formula * (matrix2[i - 1][j] + matrix2[i][j + 1] +
-                                       matrix2[i + 1][j] + matrix2[i][j - 1] -
-                                       4 * (matrix2[i][j]));
-        if ((fabs(matrix1[i][j] - matrix2[i][j]) > point)) {
+        uint64_t idx = i * C + j;
+        up = matrix2[idx - C];    // matrix2[i - 1][j]
+        down = matrix2[idx + C];  // matrix2[i + 1][j]
+        left = matrix2[idx - 1];  // matrix2[i][j - 1]
+        right = matrix2[idx + 1]; // matrix2[i][j + 1]
+        center = matrix2[idx];    // matrix2[i][j]
+        matrix1[idx] = center + formula * (up + right + down + left - 4 * center);
+        if (fabs(matrix1[idx] - center) > point) {
           limit = true;
         }
       }
     }
-    for (uint64_t i = 0; i < R - 1; i++) {
-      for (uint64_t j = 0; j < C - 1; j++) {
-        matrix2[i][j] = matrix1[i][j];
-      }
+    if (limit) {
+      double *temp = matrix2;
+      matrix2 = matrix1;
+      matrix1 = temp;
     }
     states++;
   }
@@ -93,7 +121,7 @@ void make_report(char *lineReport, time_t time, char *output_path,
 
 // Return parameter text must have at least 48 chars (YYYY/MM/DD hh:mm:ss)
 char *format_time(const time_t seconds, char *text, const size_t capacity) {
-  const struct tm *gmt = gmtime(&seconds);  // NOLINT
+  const struct tm *gmt = gmtime(&seconds); // NOLINT
   snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year - 70,
            gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour, gmt->tm_min,
            gmt->tm_sec);
