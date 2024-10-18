@@ -9,6 +9,7 @@
 double **makeMatrix(uint64_t R, uint64_t C);
 double **read_binArchive(plate_t *plate, char *binName, char *subBin);
 double **copy_matrix(uint64_t R, uint64_t C, double **matrixOriginal);
+double *arrayToMatrix(double **matrix, uint64_t R, uint64_t C);
 void freeMatrix(double **Matrix, uint64_t R);
 char *lineToRead(FILE *file, uint64_t line);
 uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
@@ -21,7 +22,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   FILE *file = fopen(jobFilePath, "r");
   // if file is null, don't exist
   if (!file) {
-    perror("Error: can't open the file");
+    fprintf(stderr, "Error: can't open the file\n");
     fclose(file);
     return 0;
   }
@@ -45,6 +46,8 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
              &Time, &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
     plate->plateM1 = read_binArchive(plate, BinaryFile, subBin);
     plate->plateM2 = copy_matrix(plate->rows, plate->columns, plate->plateM1);
+    plate->arrayM1 = arrayToMatrix(plate->plateM1, plate->rows, plate->columns);
+    plate->arrayM2 = arrayToMatrix(plate->plateM2, plate->rows, plate->columns);
     plate->time = Time;
     plate->thermal_diffusivity = Thermal_diffusivity;
     plate->alture = Alture;
@@ -54,6 +57,8 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
     fprintf(stderr, "Error: the values of jobFile are incorrect\n");
     return 0;
   }
+  freeMatrix(plate->plateM1, plate->rows);
+  freeMatrix(plate->plateM2, plate->rows);
   free(BinaryFile);
   fclose(file);
   return 1;
@@ -71,7 +76,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   // if file is null, don't exist
   if (!file) {
     free(pathBin);
-    perror("Error: can't open the bin file");
+    fprintf(stderr,"Error: can't open the bin file\n");
     return NULL;
   }
   uint64_t R = 0;
@@ -80,21 +85,21 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   if (fread(&R, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error: can't read the rows");
+    fprintf(stderr,"Error: can't read the rows\n");
     return NULL;
   }
   // to read followin 8 bytes, C = columns
   if (fread(&C, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error: can't read the columns");
+    fprintf(stderr,"Error: can't read the columns\n");
     return NULL;
   }
   plate->rows = R;
   plate->columns = C;
   double **matrix = makeMatrix(R, C);
   if (!matrix) {
-    perror("Error: can't make matrix");
+    fprintf(stderr,"Error: can't make matrix\n");
     return NULL;
   }
   // to situate all valors in the matrix
@@ -108,17 +113,10 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
         free(pathBin);
         free(matrix);
         fclose(file);
-        perror("Error: can't read the matrix values");
+        fprintf(stderr,"Error: can't read the matrix values\n");
         return NULL;
       }
     }
-  }
-  // to print matrix
-  for (uint64_t i = 0; i < R; i++) {
-    for (uint64_t j = 0; j < C; j++) {
-      printf("%f ", matrix[i][j]);
-    }
-    printf("\n");
   }
   free(pathBin);
   fclose(file);
@@ -133,7 +131,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
   // creation of rows
   double **matrix = malloc(R * sizeof(double));
   if (!matrix) {
-    perror("Error: value of rows if 0");
+    fprintf(stderr,"Error: don't exist value of rows\n");
     return NULL;
   }
   // creation of columns
@@ -145,11 +143,25 @@ double **makeMatrix(uint64_t R, uint64_t C) {
         free(matrix[j]);
       }
       free(matrix);
-      perror("Error: value of rows if 0");
+      fprintf(stderr,"Error: don't exist value of columns\n");
       return NULL;
     }
   }
   return matrix;
+}
+
+double *arrayToMatrix(double **matrix, uint64_t R, uint64_t C) {
+  double *array = (double *)malloc(R * C * sizeof(double));
+  if (!array) {
+    fprintf(stderr,"Error: can't make the array\n");
+    return NULL;
+  }
+  for (uint64_t i = 0; i < R; i++) {
+    for (uint64_t j = 0; j < C; j++) {
+      array[i * C + j] = matrix[i][j];
+    }
+  }
+  return array;
 }
 
 /// @brief to liberate memory from a matrix of dinamic memory
@@ -190,7 +202,7 @@ char *lineToRead(FILE *file, uint64_t line) {
   lengthLine++;
   char *buffer = malloc(lengthLine * sizeof(char));
   if (!buffer) {
-    printf("error");
+    fprintf(stderr,"Error: can't make the buffer\n");
     return NULL;
   }
   rewind(file);
@@ -228,8 +240,8 @@ double **copy_matrix(uint64_t R, uint64_t C, double **matrixOriginal) {
 }
 
 uint8_t destruct_plate(plate_t *plate) {
-  freeMatrix(plate->plateM1, plate->rows);
-  freeMatrix(plate->plateM2, plate->rows);
+  free(plate->arrayM1);
+  free(plate->arrayM2);
   free(plate->lineReaded);
   return 0;
 }

@@ -49,6 +49,9 @@ typedef struct plate {
   uint64_t rows;
   uint64_t columns;
   char *lineReaded;
+  // this is to know if blank line
+  uint8_t blankline;
+  // this is to know the number of line
 } plate_t;
 
 /// @brief this is to inicializate plate

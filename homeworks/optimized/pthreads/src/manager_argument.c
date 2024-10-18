@@ -3,6 +3,8 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
+
 #include "manager_argument.h"
 #include "path_creator.h"
 
@@ -15,15 +17,34 @@ void init_managerArgument(manager_argument_t *manager, char *argv[]) {
   char *path_output = make_path(argv[3], jobName);
   manager->jobPath = path_job;
   manager->outputPath = path_output;
+  // to get the count of threads that are in the computer
+  uint64_t thread_count = sysconf(_SC_NPROCESSORS_ONLN);
+  if (sscanf(argv[4], "%" SCNu64, &thread_count) == 1) {
+    manager->thread_count = thread_count;
+  } else {
+    manager->thread_count = 0;
+    fprintf(stderr, "Error: invalid thread count\n");
+    free(jobName);
+    return;
+  }
+  if (thread_count == 0) {
+    manager->thread_count = sysconf(_SC_NPROCESSORS_ONLN);;
+  }
   free(jobName);
 }
 
 char *get_jobPath(manager_argument_t *manager) {
   // to valitate jobPath exist
   if (!manager->jobPath) {
-    fprintf(stderr, "Error: not found jobPath\n");
+    fprintf(stderr, "Error: jobpath is NULL\n");
     return NULL;
   }
+  FILE *file = fopen(manager->jobPath, "r");
+  if (!file) {
+    fprintf(stderr, "Error: the path of the jobfile is incorrect\n");
+    return NULL;
+  }
+  fclose(file);
   return manager->jobPath;
 }
 
@@ -37,20 +58,36 @@ char *get_outputPath(manager_argument_t *manager) {
 }
 __uint64_t get_lines_to_read(char *path) {
   FILE *file = fopen(path, "r");
-  if (!file) {  // validate that path exist
-    perror("Error: can't count the lines");
+  if (!file) {  // validate that path exists
+    fprintf(stderr, "Error: can't open the file to count the lines\n");
     return 0;
   }
-  // now count the lines of file
+
+  // Check if the file is empty
+  int first_char = fgetc(file);
+  if (first_char == EOF) {
+    fprintf(stderr, "Error: the file %s is empty\n", path);
+    fclose(file);
+    return 0;
+  }
+
+  // Reset the file pointer to the beginning of the file
+  rewind(file);
+
+  // Now count the lines of the file
   __uint64_t lines = 0;
   char c;
-  // when read the last line the loops ends, save the count and return the lines
   while ((c = fgetc(file)) != EOF) {
     if (c == '\n') {
       lines++;
     }
   }
-  lines++;
+
+  // If the last character is not a newline, add one more line
+  if (first_char != '\n') {
+    lines++;
+  }
+
   fclose(file);
   return lines;
 }
@@ -60,6 +97,10 @@ __uint64_t get_lines_to_read(char *path) {
 /// @return jobxxx.tsv or NULL if don't exist job file
 char *extract_outputName(char *jobFile) {
   // if exist the name of job
+  if (!jobFile) {
+    fprintf(stderr, "Error: not found jobFile\n");
+    return NULL;
+  }
   if (jobFile[0] == 'j' && jobFile[1] == 'o' && jobFile[2] == 'b') {
     size_t size = 0;
     while (jobFile[size] != '.') {

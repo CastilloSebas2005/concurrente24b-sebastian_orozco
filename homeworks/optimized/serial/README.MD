@@ -20,7 +20,7 @@ Debido a un problema con el comando "make test", las pruebas se deben correr man
 
 1. Asegurese de estar en la siguiente ruta: concurrente24b-sebastian_orozco/homeworks/serial
 2. Escriba el comando: make
-3. Escriba en la terminal: ./bin/serial job002.txt tests output (en este caso se eligió el archivo de pruebas 2)
+3. Escriba en la terminal: ./bin/serial job002.txt tests/job002b output (en este caso se eligió el archivo de pruebas 2)
 
 Este comando anterior porque el programa recibe un archivo jobxxx.txt, la carpeta donde está ese archivo(importante para que pueda encontrar la ruta) y la carpeta donde se va a guardar el archivo de salida. Asegurese de borrar o limpiar el contenido del archivo job002.tsv cada vez que quiera correr el programa, no porque se vaya a sobreescribir, si no que se usa el argumento "a+" que lo que hace es escribir al final del archivo. Por lo tanto debe asegurarse de limpiarlo. El programa ya se comparó y da la salida esperada, solo que el formato dependiendo de los decimales no lo acomoda tan bien. También asegúrese que su archivo job esté bien escrito y que no tenga espacios en blanco, debido a que si pasa esto, el programa lo detectará como un error y va a reportar en el error estándar Error: line of jobfile is blank or corrupt (Está hecho así para evitar archivos dañados o con contenido extraño).
 

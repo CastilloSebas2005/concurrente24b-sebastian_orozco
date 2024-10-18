@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "path_creator.h"
 #include "plate.h"
 
@@ -21,14 +22,15 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   FILE *file = fopen(jobFilePath, "r");
   // if file is null, don't exist
   if (!file) {
-    perror("Error: can't open the file");
+    fprintf(stderr, "Error: can't open the file\n");
     fclose(file);
-    return 0;
+    return 2;
   }
   char *line_readed = lineToRead(file, line);
   if (!line_readed) {
+    plate->blankline = 1;
     fclose(file);
-    return 0;
+    return 1;
   }
   size_t index = 0;
   while (line_readed[index] != ' ') {
@@ -41,7 +43,7 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
   char *BinaryFile = malloc(sizeof(char) * index);
 
   // read the line that contains the necesary information to the math part
-  if (sscanf(line_readed, "%s %" SCNd64 " %lf %" SCNd32 " %lf", BinaryFile,
+  if (sscanf(line_readed, "%s %" SCNd64 " %le %" SCNd32 " %le", BinaryFile,
              &Time, &Thermal_diffusivity, &Alture, &Sensitivity) == 5) {
     plate->plateM1 = read_binArchive(plate, BinaryFile, subBin);
     plate->plateM2 = copy_matrix(plate->rows, plate->columns, plate->plateM1);
@@ -50,13 +52,16 @@ uint8_t init_plate(plate_t *plate, char *jobFilePath, char *subBin,
     plate->alture = Alture;
     plate->sensitivity = Sensitivity;
     plate->lineReaded = line_readed;
+    plate->blankline = 0;
   } else {
     fprintf(stderr, "Error: the values of jobFile are incorrect\n");
-    return 0;
+    free(BinaryFile);
+    fclose(file);
+    return 2;
   }
   free(BinaryFile);
   fclose(file);
-  return 1;
+  return 0;
 }
 
 /// @brief this is to read the binary archive and load the values in the matrix
@@ -71,7 +76,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   // if file is null, don't exist
   if (!file) {
     free(pathBin);
-    perror("Error: can't open the bin file");
+    fprintf(stderr, "Error: can't open the bin file\n");
     return NULL;
   }
   uint64_t R = 0;
@@ -80,21 +85,21 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   if (fread(&R, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error: can't read the rows");
+    fprintf(stderr, "Error: can't read the rows\n");
     return NULL;
   }
   // to read followin 8 bytes, C = columns
   if (fread(&C, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    perror("Error: can't read the columns");
+    fprintf(stderr, "Error: can't read the columns\n");
     return NULL;
   }
   plate->rows = R;
   plate->columns = C;
   double **matrix = makeMatrix(R, C);
   if (!matrix) {
-    perror("Error: can't make matrix");
+    fprintf(stderr, "Error: can't make matrix\n");
     return NULL;
   }
   // to situate all valors in the matrix
@@ -108,7 +113,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
         free(pathBin);
         free(matrix);
         fclose(file);
-        perror("Error: can't read the matrix values");
+        fprintf(stderr, "Error: can't read the matrix values\n");
         return NULL;
       }
     }
@@ -133,7 +138,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
   // creation of rows
   double **matrix = malloc(R * sizeof(double));
   if (!matrix) {
-    perror("Error: value of rows if 0");
+    fprintf(stderr, "Error: don't exist value of rows\n");
     return NULL;
   }
   // creation of columns
@@ -145,7 +150,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
         free(matrix[j]);
       }
       free(matrix);
-      perror("Error: value of rows if 0");
+      fprintf(stderr, "Error: don't exist value of columns\n");
       return NULL;
     }
   }
@@ -190,7 +195,7 @@ char *lineToRead(FILE *file, uint64_t line) {
   lengthLine++;
   char *buffer = malloc(lengthLine * sizeof(char));
   if (!buffer) {
-    printf("error");
+    fprintf(stderr, "Error: can't make the buffer\n");
     return NULL;
   }
   rewind(file);
