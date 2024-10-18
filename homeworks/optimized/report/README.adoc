@@ -28,7 +28,7 @@
 
 image::images/serial001.png
 
-Esta es la imagen de la versión serial sin optimizar, como se puede ver el aspecto menos eficiente es a la hora de copiar las matrices, para optimizar esto se va a realizar una copia directamente desde la memoria y así volver más rápido este proceso, además de que se aplastarán las matrices en arreglos ya que esto disminuye los fallos de caché y ayuda a ganar algunos segundos.s
+[Esta es la imagen de la versión serial sin optimizar, como se puede ver el aspecto menos eficiente es a la hora de copiar las matrices, para optimizar esto se va a realizar una copia directamente desde la memoria y así volver más rápido este proceso, además de que se aplastarán las matrices en arreglos ya que esto disminuye los fallos de caché y ayuda a ganar algunos segundos.]
 
 [[serial_iter01]]
 === Iteración 1
