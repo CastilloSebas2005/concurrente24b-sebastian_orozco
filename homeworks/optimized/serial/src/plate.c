@@ -3,8 +3,9 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "path_creator.h"
+
 #include "plate.h"
+#include "path_creator.h"
 
 double **makeMatrix(uint64_t R, uint64_t C);
 double **read_binArchive(plate_t *plate, char *binName, char *subBin);
@@ -76,7 +77,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   // if file is null, don't exist
   if (!file) {
     free(pathBin);
-    fprintf(stderr,"Error: can't open the bin file\n");
+    fprintf(stderr, "Error: can't open the bin file\n");
     return NULL;
   }
   uint64_t R = 0;
@@ -85,21 +86,21 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
   if (fread(&R, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    fprintf(stderr,"Error: can't read the rows\n");
+    fprintf(stderr, "Error: can't read the rows\n");
     return NULL;
   }
   // to read followin 8 bytes, C = columns
   if (fread(&C, sizeof(uint64_t), 1, file) != 1) {
     free(pathBin);
     fclose(file);
-    fprintf(stderr,"Error: can't read the columns\n");
+    fprintf(stderr, "Error: can't read the columns\n");
     return NULL;
   }
   plate->rows = R;
   plate->columns = C;
   double **matrix = makeMatrix(R, C);
   if (!matrix) {
-    fprintf(stderr,"Error: can't make matrix\n");
+    fprintf(stderr, "Error: can't make matrix\n");
     return NULL;
   }
   // to situate all valors in the matrix
@@ -113,7 +114,7 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
         free(pathBin);
         free(matrix);
         fclose(file);
-        fprintf(stderr,"Error: can't read the matrix values\n");
+        fprintf(stderr, "Error: can't read the matrix values\n");
         return NULL;
       }
     }
@@ -131,7 +132,7 @@ double **makeMatrix(uint64_t R, uint64_t C) {
   // creation of rows
   double **matrix = malloc(R * sizeof(double));
   if (!matrix) {
-    fprintf(stderr,"Error: don't exist value of rows\n");
+    fprintf(stderr, "Error: don't exist value of rows\n");
     return NULL;
   }
   // creation of columns
@@ -143,19 +144,25 @@ double **makeMatrix(uint64_t R, uint64_t C) {
         free(matrix[j]);
       }
       free(matrix);
-      fprintf(stderr,"Error: don't exist value of columns\n");
+      fprintf(stderr, "Error: don't exist value of columns\n");
       return NULL;
     }
   }
   return matrix;
 }
 
+/// @brief to convert a matrix in a array
+/// @param matrix matrix of doubles
+/// @param R Rows
+/// @param C Cols
+/// @return Array with the values of matrix
 double *arrayToMatrix(double **matrix, uint64_t R, uint64_t C) {
   double *array = (double *)malloc(R * C * sizeof(double));
   if (!array) {
-    fprintf(stderr,"Error: can't make the array\n");
+    fprintf(stderr, "Error: can't make the array\n");
     return NULL;
   }
+  /// to situate all values of matrix in the array
   for (uint64_t i = 0; i < R; i++) {
     for (uint64_t j = 0; j < C; j++) {
       array[i * C + j] = matrix[i][j];
@@ -202,7 +209,7 @@ char *lineToRead(FILE *file, uint64_t line) {
   lengthLine++;
   char *buffer = malloc(lengthLine * sizeof(char));
   if (!buffer) {
-    fprintf(stderr,"Error: can't make the buffer\n");
+    fprintf(stderr, "Error: can't make the buffer\n");
     return NULL;
   }
   rewind(file);
