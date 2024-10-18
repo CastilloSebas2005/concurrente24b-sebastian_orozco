@@ -37,6 +37,8 @@ typedef struct plate {
   // this is the rectangle matrix
   double **plateM1;
   double **plateM2;
+  double *arrayM1;
+  double *arrayM2;
   // time in seconds
   __int64_t time;
   // this is the alpha constant
