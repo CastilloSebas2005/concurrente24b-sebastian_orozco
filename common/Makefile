@@ -1,4 +1,4 @@
-# Makefile v3.5.0 2023-Oct-23 Jeisson Hidalgo-Cespedes ECCI-UCR CC-BY 4.0
+# Makefile v3.5.1 2024-Aug-26 Jeisson Hidalgo-Cespedes ECCI-UCR CC-BY 4.0
 
 # VAR=value  ## Overrides a variable, e.g CC=mpicc DEFS=-DGUI. See helpvars
 CC=gcc#= C compiler
@@ -253,18 +253,6 @@ memcheck: $(EXEFILE)  ## Run executable for detecting memory errors with Valgrin
 helgrind: $(EXEFILE)  ## Run executable for detecting thread errors with Valgrind
 	valgrind -q -s --sigill-diagnostics=yes --tool=helgrind $(EXEARGS)
 
-asan: $(INPUTFC)
-	cc -g -Wall -Wextra -fsanitize=address $(INPUTFC) -o $(EXEARGS) -pthread
-
-msan: $(INPUTFC)
-	clang -g -Wall -Wextra -fsanitize=memory $(INPUTFC) -o $(EXEARGS) -pthread
-
-tsan: $(INPUTFC)
-	cc -g -Wall -Wextra -fsanitize=thread $(INPUTFC) -o $(EXEARGS) -pthread
-
-ubsan: $(INPUTFC)
-	cc -g -Wall -Wextra -fsanitize=undefined $(INPUTFC) -o $(EXEARGS) -pthread
-
 .gitignore:  ## Generate a .gitignore file
 	echo $(IGNORES) | tr " " "\n" > .gitignore
 
@@ -283,14 +271,14 @@ endif
 
 # Install dependencies for Debian or RedHat based distros (pacman pending)
 DEPS=clang valgrind doxygen pipx python3-gpg checkstyle
-INSTDEPS=sudo apt install build-essential openjdk-17-jdk
+INSTDEPS=sudo apt install build-essential openjdk-17-jdk cpplint icdiff
 PIP=pipx
 ifeq (, $(shell which apt))
-	INSTDEPS=sudo dnf groupinstall 'Development Tools' && sudo dnf install java-17-openjdk
+	INSTDEPS=sudo dnf groupinstall 'Development Tools' && sudo dnf install java-17-openjdk && $(PIP) install icdiff && $(PIP) install cpplint
 endif # not an apt-based distribution, use dnf
 
 instdeps:  ## Install needed packages on Debian/RedHat-based distributions
-	$(INSTDEPS) $(DEPS) && $(PIP) ensurepath && $(PIP) install icdiff && $(PIP) install cpplint
+	$(INSTDEPS) $(DEPS) && $(PIP) ensurepath
 
 update:  ## Update this Makefile to latest version"
 	$(DOWN) $(MAKSITE)/Makefile > $(MAKFILE)

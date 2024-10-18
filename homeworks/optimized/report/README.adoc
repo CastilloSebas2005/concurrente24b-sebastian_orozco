@@ -17,9 +17,8 @@
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Descripción corta
 |0 |Serial0 |10851.628528535 |1.00 |Versión serial inicial (Tarea01)
 |1 |Serial1 |9812.5760090000 |1.11 |Versión serial creación de arreglos y copias de memoria directas (Tarea03)
-|2 |Serial2 | | |Versión serial con técnica de loop unrolling para hacer ciclos más cortos
+|2 |Serial2 | | |Versión serial con técnica de loop unrolling para hacer ciclos más cortos (Tarea03)
 |===
-
 
 [[serial_iter00]]
 === Versión serial original (Tarea01)

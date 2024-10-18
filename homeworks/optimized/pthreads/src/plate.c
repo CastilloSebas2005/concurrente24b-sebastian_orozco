@@ -123,13 +123,6 @@ double **read_binArchive(plate_t *plate, char *binName, char *subBin) {
       }
     }
   }
-  // to print matrix
-  for (uint64_t i = 0; i < R; i++) {
-    for (uint64_t j = 0; j < C; j++) {
-      printf("%f ", matrix[i][j]);
-    }
-    printf("\n");
-  }
   free(pathBin);
   fclose(file);
   return matrix;
