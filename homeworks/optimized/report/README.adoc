@@ -45,8 +45,8 @@ Esta es la imagen de la versión serial sin optimizar, como se puede ver el aspe
 |===
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Eficiencia |Descripción corta
 |- |SerialI |9812.5760090000 |1.00 |1.00 |Versión serial final
-|1 |Conc0 |5589.1285985670 |1.75| |Versión concurrente inicial (Tarea02)
-|2 |Conc1 |2855.7376927230 |3.44| |Versión concurrente con las optimizaciones de la serial final
+|1 |Conc0 |5589.1285985670 |1.75|0.15 |Versión concurrente inicial (Tarea02)
+|2 |Conc1 |2855.7376927230 |3.44|0.29 |Versión concurrente con las optimizaciones de la serial final
 |3 | | | | |Versión concurrente final
 |===
 

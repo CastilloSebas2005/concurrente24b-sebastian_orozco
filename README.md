@@ -97,19 +97,21 @@ Proceso de dividir una tarea o conjunto de datos en unidades más pequeñas y ma
 
 Asignación de tareas o datos a recursos de cómputo para aprovechar al máximo el paralelismo disponible. Implica una planificación cuidadosa de la distribución de la carga de trabajo entre los diferentes procesadores, núcleos o nodos en un sistema paralelo o distribuido.
 
-### 21. Incremento de velocidad
+### 20. Incremento de velocidad
 
 Beneficio obtenido al dividir una tarea entre múltiples recursos de procesamiento. Se mide mediante el cociente entre el tiempo que tarda un programa en ejecutarse secuencialmente y el tiempo que toma ejecutar la versión paralela del mismo programa.
 
-### 23. Comunicación punto a punto entre procesos
+### 21. Eficiencia
+
+### 22. Comunicación punto a punto entre procesos
 
 No visto formalmente
 
-### 24. Comunicación colectiva entre procesos
+### 23. Comunicación colectiva entre procesos
 
 No visto formalmente
 
-### 25. Reducción
+### 24. Reducción
 
 No visto formalmente
 
