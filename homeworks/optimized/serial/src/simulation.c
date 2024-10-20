@@ -68,12 +68,10 @@ uint64_t transfer(double *matrix1, double *matrix2, double formula, uint64_t R,
   double up, down, left, right, center;
   while (limit) {
     limit = false;
-    // Iterate with loop unrolling
     for (uint64_t i = 1; i < R - 1; i++) {
       uint64_t base_idx = i * C;
-      for (uint64_t j = 1; j < C - 1; j += 4) {
+      for (uint64_t j = 1; j < C - 1; j++) {
         uint64_t idx = base_idx + j;
-        // It 1
         up = matrix2[idx - C];
         down = matrix2[idx + C];
         left = matrix2[idx - 1];
@@ -83,51 +81,6 @@ uint64_t transfer(double *matrix1, double *matrix2, double formula, uint64_t R,
             center + formula * (up + right + down + left - 4 * center);
         if (fabs(matrix1[idx] - center) > point) {
           limit = true;
-        }
-
-        // It 2
-        if (j + 1 < C - 1) {
-          idx++;
-          up = matrix2[idx - C];
-          down = matrix2[idx + C];
-          left = matrix2[idx - 1];
-          right = matrix2[idx + 1];
-          center = matrix2[idx];
-          matrix1[idx] =
-              center + formula * (up + right + down + left - 4 * center);
-          if (fabs(matrix1[idx] - center) > point) {
-            limit = true;
-          }
-        }
-
-        // It 3
-        if (j + 2 < C - 1) {
-          idx++;
-          up = matrix2[idx - C];
-          down = matrix2[idx + C];
-          left = matrix2[idx - 1];
-          right = matrix2[idx + 1];
-          center = matrix2[idx];
-          matrix1[idx] =
-              center + formula * (up + right + down + left - 4 * center);
-          if (fabs(matrix1[idx] - center) > point) {
-            limit = true;
-          }
-        }
-
-        // It 4
-        if (j + 3 < C - 1) {
-          idx++;
-          up = matrix2[idx - C];
-          down = matrix2[idx + C];
-          left = matrix2[idx - 1];
-          right = matrix2[idx + 1];
-          center = matrix2[idx];
-          matrix1[idx] =
-              center + formula * (up + right + down + left - 4 * center);
-          if (fabs(matrix1[idx] - center) > point) {
-            limit = true;
-          }
         }
       }
     }

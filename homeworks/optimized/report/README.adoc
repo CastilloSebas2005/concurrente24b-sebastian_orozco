@@ -17,8 +17,6 @@
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Descripción corta
 |0 |Serial0 |10851.628528535 |1.00 |Versión serial inicial (Tarea01)
 |1 |Serial1 |9812.5760090000 |1.11 |Versión serial creación de arreglos y copias de memoria directas (Tarea03)
-|2 |Serial2 | | |Versión serial con técnica de loop unrolling para hacer ciclos más cortos (Tarea03)
-|===
 
 [[serial_iter00]]
 === Versión serial original (Tarea01)
@@ -57,16 +55,17 @@ double *arrayToMatrix(double **matrix, uint64_t R, uint64_t C) {
 
 [source,c]
 ----
-    // To iterate over the matrix
-    for (uint64_t i = 1; i < R - 1; i++) {
+for (uint64_t i = 1; i < R - 1; i++) {
+      uint64_t base_idx = i * C;
       for (uint64_t j = 1; j < C - 1; j++) {
-        uint64_t idx = i * C + j;
-        up = matrix2[idx - C];    // matrix2[i - 1][j]
-        down = matrix2[idx + C];  // matrix2[i + 1][j]
-        left = matrix2[idx - 1];  // matrix2[i][j - 1]
-        right = matrix2[idx + 1]; // matrix2[i][j + 1]
-        center = matrix2[idx];    // matrix2[i][j]
-        matrix1[idx] = center + formula * (up + right + down + left - 4 * center);
+        uint64_t idx = base_idx + j;
+        up = matrix2[idx - C];
+        down = matrix2[idx + C];
+        left = matrix2[idx - 1];
+        right = matrix2[idx + 1];
+        center = matrix2[idx];
+        matrix1[idx] =
+            center + formula * (up + right + down + left - 4 * center);
         if (fabs(matrix1[idx] - center) > point) {
           limit = true;
         }
@@ -98,7 +97,7 @@ Se adjunta la evidencia que esto distribuye mejor las cosas.
 |- |SerialI |9812.5760090000 |1.00 |1.00 |Versión serial final
 |1 |Conc0 |5589.1285985670 |1.75|0.15 |Versión concurrente inicial (Tarea02)
 |2 |Conc1 |2855.7376927230 |3.44|0.29 |Versión concurrente con las optimizaciones de la serial final
-|3 | | | | |Versión concurrente final
+|3 | | | | |
 |===
 
 
