@@ -119,6 +119,14 @@ Acá se implementaron barreras y se controló mejor la concurrencia, lo que dio 
 [[optimization_comparison]]
 === Comparación de optimizaciones
 
+Se adjuntan los gráficos con los tiempos de las tablas anteriormente comentadas y optimizaciones explicadas.
+
+Los nombres son significativos para que se entienda que se estaba comparando.}
+
+image::images/graf1.png[Gráfico1]
+
+image::images/graf2.png[Gráfico2]
+
 (pendiente)
 
 [[concurrency_comparison]]
