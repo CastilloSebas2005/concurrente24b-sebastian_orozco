@@ -5,7 +5,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 #include <time.h>
 
 #include "plate.h"
@@ -36,9 +35,7 @@ char *format_line(char *line);
 /// @param states Number of states
 void make_report(char *lineReport, time_t time, char *output_path,
                  uint64_t states);
-
-void update_plate(double *matrix1, double *matrix2, size_t matrix_size);
-
+        
 uint8_t init_simulation(plate_t plate, char *output_path) {
   // this is the unique formula that have to aply
   double formula =

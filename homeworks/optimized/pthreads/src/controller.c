@@ -18,6 +18,7 @@
  */
 typedef struct shared_data {
   char **line_report;
+  uint64_t thread_count;
 } shared_data_t;
 
 /**
@@ -80,6 +81,7 @@ void init_controller(char *argv[]) {
   shared_data_t *shared_data =
       (shared_data_t *)calloc(1, sizeof(shared_data_t));
   shared_data->line_report = (char **)calloc(linesToRead, sizeof(char *));
+  shared_data->thread_count = thread_count;
   plate_t plates[linesToRead]; // NOLINT
   for (uint64_t i = 0; i < linesToRead; i++) {
     init_plate(&plates[i], jobPath, argv[2], i);
@@ -91,7 +93,7 @@ void init_controller(char *argv[]) {
     // Execute in a single thread
     for (uint64_t i = 0; i < linesToRead; i++) {
       if (plates[i].blankline == 0) {
-        uint64_t states = init_simulation(plates[i]);
+        uint64_t states = init_simulation(plates[i], thread_count);
         char *line = make_line_to_report(
             plates[i].lineReaded, (time_t)(plates[i].time * states), states);
         shared_data->line_report[i] = line;
@@ -195,7 +197,7 @@ void *work(void *data) {
   private_data_t *private_data = (private_data_t *)data;
   for (uint64_t i = 0; i < private_data->linesToRead; i++) {
     if (private_data->plates[i].blankline == 0) {
-      uint64_t states = init_simulation(private_data->plates[i]);
+      uint64_t states = init_simulation(private_data->plates[i], private_data->shared_data->thread_count);
       char *line = make_line_to_report(
           private_data->plates[i].lineReaded,
           (time_t)(private_data->plates[i].time * states), states);

@@ -79,14 +79,6 @@ for (uint64_t i = 1; i < R - 1; i++) {
     }
 ----
 
-[[serial_iter02]]
-=== Iteración 2
-El cambio con respecto a la uno fue simplemente que en el mismo ciclo se hacen más calculos. Sin embargo esto ayudo a mejorar los tiempos un poco. No se muestra el código porque sí quedo un poco más extenso.
-
-image::images/serial003.png[Serial003]
-
-Se adjunta la evidencia que esto distribuye mejor las cosas.
-
 
 [[concurrent_optimizations]]
 == Optimizaciones concurrentes
@@ -96,8 +88,9 @@ Se adjunta la evidencia que esto distribuye mejor las cosas.
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Eficiencia |Descripción corta
 |- |SerialI |9812.5760090000 |1.00 |1.00 |Versión serial final
 |1 |Conc0 |5589.1285985670 |1.75|0.15 |Versión concurrente inicial (Tarea02)
-|2 |Conc1 |2855.7376927230 |3.44|0.29 |Versión concurrente con las optimizaciones de la serial final
-|3 | | | | |
+|2 |Conc1 |2578.5239965700 |3.81|0.32 |Versión concurrente con las optimizaciones de la serial final, nada concurrente, pero cuenta ya que con hilos agiliza el tiempo
+|3 |Conc2 |2124.5898104180 | | |Version concurrente, implementando hilos en los calculos
+|4 |Conc3 |1680.4242272460 | | |Version concurrente final, implementando barrera y quitando pthread_join
 |===
 
 

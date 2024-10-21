@@ -8,7 +8,7 @@
 /// calculate the total time
 /// @param plate objetc plate, this contains the necesary to make the simulation
 /// @return 1 if all is good 0 if occurs an error
-uint64_t init_simulation(plate_t plate);
+uint64_t init_simulation(plate_t plate, uint64_t thread_count);
 
 /// @brief This is to make line to report and save in the shared_data
 /// @param lineReport This is the line to report
