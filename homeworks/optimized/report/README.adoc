@@ -114,20 +114,60 @@ Acá se implementaron barreras y se controló mejor la concurrencia, lo que dio 
 [[conc_iter04]]
 === Iteración 4
 
-Acá se implementaron barreras y se controló mejor la concurrencia, lo que dio los mejores resultados. Además, se añadió una decisión para cuando las matrices son muy pequeñas se hagan de manera serial con mapeo dinámico.
+Acá se implementaron barreras y se controló mejor la concurrencia, lo que dio los mejores resultados. Además, se añadió una decisión para cuando las matrices son muy pequeñas se hagan de manera serial con mapeo dinámico. No es la version final ya que presentó tiempos peores que la concurrente con mapeo stático
 
 [[optimization_comparison]]
 === Comparación de optimizaciones
 
 Se adjuntan los gráficos con los tiempos de las tablas anteriormente comentadas y optimizaciones explicadas.
 
-Los nombres son significativos para que se entienda que se estaba comparando.}
+Los nombres son significativos para que se entienda que se estaba comparando.
 
 image::images/graf1.png[Gráfico1]
 
+Versión Serial Inicial (Serial0):
+
+La versión serial inicial tiene el mayor tiempo de ejecución, lo cual era esperado debido a la falta de optimizaciones.
+
+Primera Optimización Serial (Serial1):
+
+La primera optimización serial muestra una mejora significativa en el tiempo de ejecución. Esto se debe a la optimización en la creación de arreglos y copias de memoria directas, lo que reduce el tiempo de acceso a la memoria y mejora la eficiencia del caché.
+
+Versión Concurrente Inicial (Conc0):
+
+La versión concurrente inicial muestra una mejora en el tiempo de ejecución en comparación con la versión serial final. Sin embargo, la eficiencia es baja debido a la sobrecarga de la creación y sincronización de hilos.
+
+Optimización Concurrente con Mejoras Seriales (Conc1):
+
+Al aplicar las optimizaciones de la versión serial final a la versión concurrente, se observa una mejora significativa en el tiempo de ejecución. Esto demuestra que las optimizaciones seriales también benefician a la versión concurrente.
+
+Implementación de Hilos en los Cálculos (Conc2):
+
+La implementación de hilos en los cálculos muestra una mejora adicional en el tiempo de ejecución. Esto se debe a la paralelización efectiva de los cálculos, lo que reduce el tiempo total de ejecución.
+
+Versión Concurrente con Barreras y Mapeo Estático (Conc3):
+
+La versión concurrente con barreras y mapeo estático muestra una mejora significativa en el tiempo de ejecución. La utilización de barreras mejora la sincronización entre los hilos, y el mapeo estático asegura una distribución equilibrada de la carga de trabajo.
+
+Versión Concurrente con Barreras y Mapeo Dinámico (Conc4):
+
+La versión concurrente con barreras y mapeo dinámico muestra un tiempo de ejecución ligeramente peor que la versión con mapeo estático. Esto puede
+
 image::images/graf2.png[Gráfico2]
 
-(pendiente)
+El segundo gráfico muestra la comparación del speedup y la eficiencia para las diferentes versiones del código. A continuación, se discuten las observaciones clave:
+
+Speedup:
+
+El speedup aumenta significativamente con cada optimización concurrente. La versión concurrente con barreras y mapeo estático (Conc3) muestra el mayor speedup, lo que indica una mejora significativa en el rendimiento en comparación con la versión serial.
+La versión concurrente con mapeo dinámico (Conc4) muestra un speedup ligeramente menor que la versión con mapeo estático, lo que sugiere que el mapeo dinámico puede no ser tan eficiente en este caso.
+Eficiencia:
+
+La eficiencia es baja en la versión concurrente inicial (Conc0) debido a la sobrecarga de la creación y sincronización de hilos.
+
+La eficiencia mejora con cada optimización concurrente, alcanzando su punto máximo en la versión con barreras y mapeo estático (Conc3).
+
+La eficiencia de la versión con mapeo dinámico (Conc4) es ligeramente menor que la de la versión con mapeo estático, lo que sugiere que la sobrecarga adicional de la asignación dinámica de tareas puede afectar negativamente la eficiencia.
 
 [[concurrency_comparison]]
 === Comparación del grado de concurrencia
