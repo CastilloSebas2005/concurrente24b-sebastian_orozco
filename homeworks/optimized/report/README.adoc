@@ -167,7 +167,7 @@ La eficiencia es baja en la versión concurrente inicial (Conc0) debido a la sob
 
 La eficiencia mejora con cada optimización concurrente, alcanzando su punto máximo en la versión con barreras y mapeo estático (Conc3).
 
-La eficiencia de la versión con mapeo dinámico (Conc4) es ligeramente menor que la de la versión con mapeo estático, lo que sugiere que la sobrecarga adicional de la asignación dinámica de tareas puede afectar negativamente la eficiencia.
+La versión concurrente con barreras y mapeo dinámico muestra un tiempo de ejecución ligeramente peor que la versión con mapeo estático. Esto puede deberse a la sobrecarga adicional de la asignación dinámica de tareas, que puede no ser tan eficiente como el mapeo estático en este caso.
 
 [[concurrency_comparison]]
 === Comparación del grado de concurrencia
