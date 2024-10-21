@@ -84,11 +84,11 @@ if (limit) {
 |===
 |Iter. |Etiqueta |Duración (s) |_Speedup_ |Eficiencia |Descripción corta
 |- |SerialI |9812.5760090000 |1.00 |1.00 |Versión serial final
-|1 |Conc0 |5589.1285985670 |1.75 |0.15 |Versión concurrente inicial (Tarea02)
-|2 |Conc1 |2578.5239965700 |3.81 |0.32 |Versión concurrente con las optimizaciones de la serial final, nada concurrente, pero cuenta ya que con hilos agiliza el tiempo
-|3 |Conc2 |2124.5898104180 |4.62 |0.39 |Versión concurrente, implementando hilos en los cálculos
-|4 |Conc3 |1680.4242272460 |5.84 |0.49 |Versión concurrente final, implementando barrera y quitando pthread_join y añadiendo decisión para matrices grandes mapeo estático
-|5 |Conc4 |1781.8798552150 |5.51 |0.46 |Versión concurrente final, implementando barrera y quitando pthread_join y añadiendo decisión para matrices grandes mapeo dinámico
+|0 |Conc0 |5589.1285985670 |1.75 |0.15 |Versión concurrente inicial (Tarea02)
+|1 |Conc1 |2578.5239965700 |3.81 |0.32 |Versión concurrente con las optimizaciones de la serial final, nada concurrente, pero cuenta ya que con hilos agiliza el tiempo
+|2 |Conc2 |2124.5898104180 |4.62 |0.39 |Versión concurrente, implementando hilos en los cálculos
+|3 |Conc3 |1680.4242272460 |5.84 |0.49 |Versión concurrente final, implementando barrera y quitando pthread_join y añadiendo decisión para matrices grandes mapeo estático
+|4 |Conc4 |1781.8798552150 |5.51 |0.46 |Versión concurrente final, implementando barrera y quitando pthread_join y añadiendo decisión para matrices grandes mapeo dinámico
 |===
 
 [[conc_iter00]]
