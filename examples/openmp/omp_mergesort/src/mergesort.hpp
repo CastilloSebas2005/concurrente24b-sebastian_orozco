@@ -26,7 +26,6 @@ void mergesort(std::vector<Type> &values, const ptrdiff_t left,
 /// Se le asigna una tarea a un hilo para que realice la tarea de mergesort
 #pragma omp task default(none) shared(values) firstprivate(mid, right)
   { mergesort(values, mid + 1, right); }
-// #pragma omp taskwait
 /// Se espera a que ambas tareas terminen para continuar
 #pragma omp taskwait
 }
@@ -50,7 +49,7 @@ void mergesort(std::vector<Type> &values, const int thread_count) {
     num_threads(thread_count)
 /// Solamente un hilo se encarga de realizar la tarea de mergesort para que no
 /// se cree una tarea por cada hilo #pragma omp single a diferencia de #pragma
-/// omp critical, asegura que solo un hilo ejecute la tarea
+/// omp single, asegura que solo un hilo ejecute la tarea
 #pragma omp single
   { mergesort(values, 0, values.size() - 1); }
 }
