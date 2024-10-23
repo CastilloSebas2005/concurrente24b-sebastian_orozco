@@ -1,6 +1,8 @@
 // Copyright 2023 Jeisson Hidalgo jeisson.hidalgo@ucr.ac.cr CC-BY-4
 
 #include <omp.h>
+
+#include <vector>
 #include <cassert>
 #include <iostream>
 #include <random>
@@ -38,7 +40,6 @@ void random_fill(const size_t count, std::vector<int>& values) {
 }
 
 int main(int argc, char* argv[]) {
-  //std::cout << _OPENMP << std::endl;
   // Analyze arguents
   const size_t count = argc >= 2 ? std::stoull(argv[1]) : 0;
   const int thread_count = argc >= 3 ? atoi(argv[2]) : omp_get_max_threads();
@@ -62,7 +63,7 @@ int main(int argc, char* argv[]) {
   }
 
   // TODO(you): parallelize using number of threads given by argv[2]
-  mergesort(values, thread_count);
+    mergesort(values, thread_count);
   // Print sorted values, unless verbose mode is disabled
   if (verbose) {
     std::cout << values << std::endl;

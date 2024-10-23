@@ -1,3 +1,3 @@
 include ../../../common/Makefile
 
-FLAG += -fopenmp
+FLAGS=-fopenmp

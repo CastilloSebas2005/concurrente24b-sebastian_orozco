@@ -1,0 +1,3 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "omp_mergersot"
+PROJECT_BRIEF = "Ejercicio omp_mergesort"

@@ -58,4 +58,6 @@ Se corrió el programa bajo los siguientes parámetros para hacer la comparació
 perf stat bin/omp_mergesort 50000000 8 0
 
 Versión serial: 42.855164196 segundos
-Versión paralela 8 hilos:  10.738497594
+Versión paralela 8 hilos:  10.216468027
+
+Este fue un ejercicio hecho por mí, se puede ignorar, revisar el que está en examples/openmp/omp_mergersot
