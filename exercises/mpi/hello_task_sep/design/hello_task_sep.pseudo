@@ -1,0 +1,7 @@
+procedure main:
+    process = 0
+    init_mpi()
+    if proccess equals to 0:
+        print("hello from procces 0")
+    if proccess equals to 1:
+        print("proccess 1 shows, " number beetwen 0 and 10) 
