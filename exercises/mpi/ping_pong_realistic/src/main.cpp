@@ -1,11 +1,12 @@
 // Copyright 2024 [Sebastian Orozco Castillo]
 
+#include <mpi.h>
+#include <unistd.h>
+
 #include <cstdlib>
 #include <iostream>
-#include <mpi.h>
 #include <random>
 #include <stdexcept>
-#include <unistd.h>
 
 /// @brief This function is going to do the work
 /// @param process_rank Number of process
@@ -27,7 +28,8 @@ int main(int argc, char *argv[]) {
       MPI_Comm_size(MPI_COMM_WORLD, &process_count);
 
       if (process_count != 2) {
-        std::cerr << "READ THE README, CAN'T MAKE THAT COUNT OF PROCCESS" << std::endl;
+        std::cerr << "READ THE README, CAN'T MAKE THAT COUNT OF PROCCESS"
+                  << std::endl;
         MPI_Abort(MPI_COMM_WORLD, 1);
         return 1;
       }
