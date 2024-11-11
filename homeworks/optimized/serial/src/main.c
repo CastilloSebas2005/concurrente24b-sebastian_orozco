@@ -22,13 +22,13 @@
 // start main
 int main(int argc, char *argv[]) {
   if (argc == 4) {
-    printf("Welcome\n");
+    printf("Welcome\n"); //NOLINT
     init_controller(argv);
   } else if (argc <= 3) {
     fprintf(stderr, "Error: this program need three argument to work\n");
     return 1;
   } else if (argc > 3) {
-    fprintf(stderr,
+    fprintf(stderr, //NOLINT
             "Error: this program need three arguments no more(because this "
             "is the serial version)\n");
     return 2;

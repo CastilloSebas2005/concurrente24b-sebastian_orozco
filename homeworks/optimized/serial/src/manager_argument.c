@@ -3,6 +3,7 @@
 #include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
+
 #include "manager_argument.h"
 #include "path_creator.h"
 
@@ -38,7 +39,7 @@ char *get_outputPath(manager_argument_t *manager) {
 __uint64_t get_lines_to_read(char *path) {
   FILE *file = fopen(path, "r");
   if (!file) {  // validate that path exist
-    fprintf(stderr,"Error: can't count the lines\n");
+    fprintf(stderr,"Error: can't count the lines\n"); //NOLINT
     return 0;
   }
   // now count the lines of file
@@ -83,7 +84,7 @@ char *extract_outputName(char *jobFile) {
     jobName[i++] = '\0';
     return jobName;
   }
-  fprintf(stderr, "Error: this program need a file called jobxxx.txt\n");
+  fprintf(stderr, "Error: this program need a file called jobxxx.txt\n"); //NOLINT
   return NULL;
 }
 

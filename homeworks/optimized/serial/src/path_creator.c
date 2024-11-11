@@ -39,6 +39,6 @@ char *make_path(char *subdirectory, char *nameArchive) {
     path[j++] = nameArchive[i];
   }
   path[j++] = '\0';
-  printf("%s\n", path);
+  printf("%s\n", path); // NOLINT
   return path;
 }

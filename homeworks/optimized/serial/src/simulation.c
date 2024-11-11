@@ -35,7 +35,7 @@ char *format_line(char *line);
 /// @param states Number of states
 void make_report(char *lineReport, time_t time, char *output_path,
                  uint64_t states);
-        
+
 uint8_t init_simulation(plate_t plate, char *output_path) {
   // this is the unique formula that have to aply
   double formula =
@@ -119,7 +119,7 @@ void make_report(char *lineReport, time_t time, char *output_path,
 // Return parameter text must have at least 48 chars (YYYY/MM/DD hh:mm:ss)
 char *format_time(const time_t seconds, char *text, const size_t capacity) {
   const struct tm *gmt = gmtime(&seconds); // NOLINT
-  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year - 70,
+  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt->tm_year - 70, // NOLINT
            gmt->tm_mon, gmt->tm_mday - 1, gmt->tm_hour, gmt->tm_min,
            gmt->tm_sec);
   return text;

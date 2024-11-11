@@ -21,7 +21,7 @@ void init_controller(char *argv[]) {
     return;
   }
   plate_t plates[linesToRead];  //NOLINT
-  printf("%li", linesToRead);
+  printf("%li", linesToRead); //NOLINT
   for (uint64_t i = 0; i < linesToRead-1; i++) {
     uint8_t error1 = init_plate(&plates[i], jobPath, argv[2], i);
     if (!error1) {
@@ -32,7 +32,7 @@ void init_controller(char *argv[]) {
   for (uint64_t i = 0; i < linesToRead-1; i++) {
     uint8_t error2 = init_simulation(plates[i], output_Path);
     if (!error2) {
-      fprintf(stderr, "Error: something bad in the simulation\n");
+      fprintf(stderr, "Error: something bad in the simulation\n"); //NOLINT
       destruct_plate(&plates[i]);
       destruct_manager(&manager_argument);
       return;

@@ -222,7 +222,7 @@ char *lineToRead(FILE *file, uint64_t line) {
   }
   // to read the specific line
   if (fgets(buffer, lengthLine, file)) {
-    printf("%s\n", buffer);
+    printf("%s\n", buffer); // NOLINT
   }
   if (buffer[0] == '\n' || buffer[0] == '\0') {
     free(buffer);
