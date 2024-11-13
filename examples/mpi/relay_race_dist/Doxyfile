@@ -1,0 +1,2 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "Simulación de una carrera de relevos con mpi"

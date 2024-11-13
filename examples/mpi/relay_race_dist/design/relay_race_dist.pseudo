@@ -1,0 +1,52 @@
+procedure main(argc, argv[]):
+  if argc = 3 then
+    // We need a referee, and two processes for each team -> odd number: 2t + 1
+    if process_count >= 3 and process_count % 2 = 1 then
+      declare constant team_count = div(process_count - 1, 2)
+      declare constant stage1_delay = integer(argv[1])
+      declare constant stage2_delay = integer(argv[2])
+
+      if process_number = 0 then
+        referee(team_count)
+      else if process_number <= team_count then
+        run_stage1(stage1_delay, process_number, team_count)
+      else
+        run_stage2(stage2_delay, process_number, team_count)
+      end if
+    else
+      print "error: process count must be odd and greater than 3"
+    end if
+  else
+    print "usage: relay_race_dist stage1_delay stage2_delay"
+  end if
+end procedure
+
+procedure run_stage1(stage1_delay, process_number, team_count):
+  wait_barrier()
+  delay(stage1_delay)
+  declare constant peer = process_number + team_count
+  declare baton := true
+  send(&baton, 1, peer)
+end function
+
+procedure run_stage2(stage2_delay, process_number, team_count):
+  wait_barrier()
+  declare peer := process_number - team_count
+  declare baton := false
+  receive(&baton, 1, peer)
+  delay(stage2_delay)
+  send(&peer, 1, 0)
+end procedure
+
+procedure referee(team_count):
+  declare constant start_time = wall_time()
+  wait_barrier()
+  declare place := 0
+  for index := 0 to team_count do
+    declare team := 0
+    receive(&team, 1, any_process)
+    declare constant elapsed = wall_time() - start_time
+    place := place + 1
+    print "Place ", place, ": team ", team, " in ", elapsed, "s"
+  end for
+end procedure
