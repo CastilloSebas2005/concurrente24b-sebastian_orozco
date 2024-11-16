@@ -1,0 +1,199 @@
+procedure init_plate(plate, jobFilePath, subBin, line)
+  declare Time, Thermal_diffusivity, Alture, Sensitivity
+  file := open_file(jobFilePath, "r")
+  if file is NULL then
+    print "Error: can't open the file"
+    close_file(file)
+    return 2
+  end if
+
+  line_readed := lineToRead(file, line)
+  if line_readed is NULL then
+    plate.blankline := 1
+    close_file(file)
+    return 1
+  end if
+
+  index := 0
+  while line_readed[index] is not ' ' do
+    index := index + 1
+  end while
+  index := index + 1
+
+  BinaryFile := allocate memory for string of size index
+
+  if sscanf(line_readed, "%s %" SCNd64 " %le %" SCNd32 " %le", BinaryFile, &Time, &Thermal_diffusivity, &Alture, &Sensitivity) is 5 then
+    plate.plateM1 := read_binArchive(plate, BinaryFile, subBin)
+    plate.plateM2 := copy_matrix(plate.rows, plate.columns, plate.plateM1)
+    plate.time := Time
+    plate.thermal_diffusivity := Thermal_diffusivity
+    plate.alture := Alture
+    plate.sensitivity := Sensitivity
+    plate.lineReaded := line_readed
+    plate.blankline := 0
+  else
+    print "Error: the values of jobFile are incorrect"
+    free BinaryFile
+    close_file(file)
+    return 2
+  end if
+
+  free BinaryFile
+  close_file(file)
+  return 0
+end procedure
+
+procedure read_binArchive(plate, binName, subBin)
+  pathBin := make_path(subBin, binName)
+  file := open_file(pathBin, "rb")
+  if file is NULL then
+    free pathBin
+    print "Error: can't open the bin file"
+    return NULL
+  end if
+
+  R := 0
+  C := 0
+  if fread(&R, sizeof(uint64_t), 1, file) is not 1 then
+    free pathBin
+    close_file(file)
+    print "Error: can't read the rows"
+    return NULL
+  end if
+
+  if fread(&C, sizeof(uint64_t), 1, file) is not 1 then
+    free pathBin
+    close_file(file)
+    print "Error: can't read the columns"
+    return NULL
+  end if
+
+  plate.rows := R
+  plate.columns := C
+  matrix := makeMatrix(R, C)
+  if matrix is NULL then
+    print "Error: can't make matrix"
+    return NULL
+  end if
+
+  for i from 0 to R - 1 do
+    for j from 0 to C - 1 do
+      if fread(&matrix[i][j], sizeof(double), 1, file) is not 1 then
+        for k from 0 to R - 1 do
+          free matrix[k]
+        end for
+        free pathBin
+        free matrix
+        close_file(file)
+        print "Error: can't read the matrix values"
+        return NULL
+      end if
+    end for
+  end for
+
+  for i from 0 to R - 1 do
+    for j from 0 to C - 1 do
+      print matrix[i][j] + " "
+    end for
+    print "\n"
+  end for
+
+  free pathBin
+  close_file(file)
+  return matrix
+end procedure
+
+procedure makeMatrix(R, C)
+  matrix := allocate memory for array of R double pointers
+  if matrix is NULL then
+    print "Error: don't exist value of rows"
+    return NULL
+  end if
+
+  for i from 0 to R - 1 do
+    matrix[i] := allocate memory for array of C doubles
+    if matrix[i] is NULL then
+      for j from 0 to i - 1 do
+        free matrix[j]
+      end for
+      free matrix
+      print "Error: don't exist value of columns"
+      return NULL
+    end if
+  end for
+
+  return matrix
+end procedure
+
+procedure freeMatrix(Matrix, R)
+  for i from 0 to R - 1 do
+    free Matrix[i]
+  end for
+  free Matrix
+end procedure
+
+procedure lineToRead(file, line)
+  current_line := 0
+  lengthLine := 0
+  cursor := '\0'
+
+  while current_line is not line and (cursor := fgetc(file)) is not EOF do
+    if cursor is '\n' then
+      current_line := current_line + 1
+    end if
+  end while
+
+  if current_line is line then
+    while (cursor := fgetc(file)) is not EOF and cursor is not '\n' do
+      lengthLine := lengthLine + 1
+    end while
+  end if
+
+  if lengthLine is 0 then
+    return NULL
+  end if
+
+  lengthLine := lengthLine + 1
+  buffer := allocate memory for string of size lengthLine
+  if buffer is NULL then
+    print "Error: can't make the buffer"
+    return NULL
+  end if
+
+  rewind(file)
+  current_line := 0
+
+  while current_line is not line and (cursor := fgetc(file)) is not EOF do
+    if cursor is '\n' then
+      current_line := current_line + 1
+    end if
+  end while
+
+  if fgets(buffer, lengthLine, file) then
+    print buffer
+  end if
+
+  if buffer[0] is '\n' or buffer[0] is '\0' then
+    free buffer
+    return NULL
+  end if
+
+  return buffer
+end procedure
+
+procedure copy_matrix(R, C, matrixOriginal)
+  matrixCopy := makeMatrix(R, C)
+  for i from 0 to R - 1 do
+    for j from 0 to C - 1 do
+      matrixCopy[i][j] := matrixOriginal[i][j]
+    end for
+  end for
+  return matrixCopy
+end procedure
+
+procedure destruct_plate(plate)
+  call freeMatrix(plate.plateM1, plate.rows)
+  call freeMatrix(plate.plateM2, plate.rows)
+  free plate.lineReaded
+  return 0
+end procedure
