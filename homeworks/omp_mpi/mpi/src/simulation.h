@@ -4,10 +4,11 @@
 #define SIMULATION_H
 
 #include "plate.h"
-/// @brief This is the part of math of the simulation and export the states to
-/// calculate the total time
-/// @param plate objetc plate, this contains the necesary to make the simulation
-/// @return 1 if all is good 0 if occurs an error
+
+/// @brief This is the simulation of the plate
+/// @param plate This is the plate to make the simulation
+/// @param thread_count This is the number of threads
+/// @return The number of states
 uint64_t init_simulation(plate_t plate, uint64_t thread_count);
 
 /// @brief This is to make line to report and save in the shared_data

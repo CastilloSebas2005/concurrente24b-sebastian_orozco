@@ -44,11 +44,10 @@ typedef struct private_data {
 } private_data_t;
 
 /// @brief This is to create the threads
-/// @param thread_count Size of threads
-/// @param plates Array of plates
-/// @param linesToRead Number of lines to read
-/// @param shared_data shared_data of threads
-/// @return 0 if all is good 1 if occurs an error
+/// @param thread_count The number of threads
+/// @param plates The array of plates
+/// @param linesToRead The number of lines to read
+/// @param shared_data The shared data of threads
 void create_threads(uint64_t thread_count, plate_t *plates,
                     uint64_t linesToRead, shared_data_t *shared_data);
 
@@ -56,6 +55,12 @@ void create_threads(uint64_t thread_count, plate_t *plates,
 /// @param data This is the private data of threads
 /// @return NULL
 void *work(void *data);
+
+/// @brief This is the work of threads to make the simulation
+/// @param report This is the array of lines to report
+/// @param output_path This is the path of output file
+/// @param linesToRead This is the number of lines to read
+/// @return 0 if all is good 1 if occurs an error
 uint8_t make_report(char **report, char *output_path, uint64_t linesToRead);
 
 void init_controller(char *argv[]) {
@@ -177,7 +182,7 @@ void create_threads(uint64_t thread_count, plate_t *plates,
     }
   }
 
-  #pragma omp parallel for num_threads(Thread_count)
+#pragma omp parallel for num_threads(Thread_count)
   for (size_t i = 0; i < Thread_count; i++) {
     work(&private_data[i]);
   }

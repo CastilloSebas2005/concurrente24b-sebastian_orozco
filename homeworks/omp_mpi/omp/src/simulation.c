@@ -11,6 +11,29 @@
 #include "plate.h"
 #include "simulation.h"
 
+/**
+ * @brief This is the struct to save the shared data of the threads
+ * @details This struct is to save the shared data of the threads
+ * @var shared_data::thread_count
+ * This is the count of threads
+ * @var shared_data::formula
+ * This is the formula to make the simulation
+ * @var shared_data::matrix1
+ * This is the matrix1 of the plate
+ * @var shared_data::matrix2
+ * This is the matrix2 of the plate
+ * @var shared_data::R
+ * This is the count of rows
+ * @var shared_data::C
+ * This is the count of columns
+ * @var shared_data::limit
+ * This is the limit of the simulation
+ * @var shared_data::point
+ * This is the point of sensitivity
+ * @var shared_data::terminate
+ * This is the flag to terminate the simulation
+ *
+ */
 typedef struct shared_data {
   uint64_t thread_count;
   double formula;
@@ -23,7 +46,22 @@ typedef struct shared_data {
   bool terminate;
 } shared_data_t;
 
-typedef struct {
+/**
+ * @brief This is the struct to save the private data of the threads
+ * @details This struct is to save the private data of the threads
+ * @var private_data::start_row
+ * This is the start row of the thread
+ * @var private_data::end_row
+ * This is the end row of the thread
+ * @var private_data::limit
+ * This is the limit of the simulation
+ * @var private_data::thread_id
+ * This is the id of the thread
+ * @var private_data::shared_data
+ * This is the shared data of the threads
+ *
+ */
+typedef struct private_data {
   uint64_t start_row;
   uint64_t end_row;
   bool limit;
@@ -31,18 +69,44 @@ typedef struct {
   shared_data_t *shared_data;
 } private_data_t;
 
+/// @brief This is the function to make the simulation of the plate
+/// @param seconds Time in seconds
+/// @param text This is the buffer to save the time
+/// @param capacity This is the capacity of the buffer
+/// @return The buffer with the time
 char *format_time(const time_t seconds, char *text, const size_t capacity);
 
+/// @brief This is the function to make the simulation of the plate
+/// @param shared_data Shared data of threads
+/// @param private_data Private data of threads
+/// @return The number of states
 uint64_t transfer_parallel(shared_data_t *shared_data,
                            private_data_t *private_data);
 
+/// @brief This is the function to make the simulation of the plates
+/// @param matrix1 This is the matrix1 of the plate
+/// @param matrix2 This is the matrix2 of the plate
+/// @param formula This is the formula to make the simulation
+/// @param R Size of rows
+/// @param C Size of columns
+/// @param point This is the point of sensitivity
+/// @return The number of states
 uint64_t transfer_serial(double *matrix1, double *matrix2, double formula,
                          uint64_t R, uint64_t C, double point);
 
+/// @brief This is the function to calculate the transfer of the with the
+/// threads
+/// @param shared_data Shared data of threads
 void calculate_transfer(shared_data_t *shared_data);
 
+/// @brief This is the function to make the transfer of the plate
+/// @param private_data Private data of the threads
+/// @return NULL
 void *transfer_thread(void *private_data);
 
+/// @brief This is to format the line
+/// @param line This is the line to format
+/// @return The line formatted
 char *format_line(char *line);
 
 uint64_t init_simulation(plate_t plate, uint64_t Thread_count) {
@@ -143,18 +207,16 @@ uint64_t transfer_parallel(shared_data_t *shared_data,
   while (global_limit) {
     global_limit = false;
 
-    #pragma omp parallel num_threads(shared_data->thread_count)
+#pragma omp parallel num_threads(shared_data->thread_count)
     {
-      #pragma omp single
+#pragma omp single
       {
         for (uint64_t i = 0; i < shared_data->thread_count; i++) {
-          #pragma omp task firstprivate(i)
-          {
-            transfer_thread(&private_data[i]);
-          }
+#pragma omp task firstprivate(i)
+          { transfer_thread(&private_data[i]); }
         }
       }
-      #pragma omp taskwait
+#pragma omp taskwait
     }
 
     for (uint64_t i = 0; i < shared_data->thread_count; i++) {
@@ -227,7 +289,8 @@ char *make_line_to_report(char *lineReport, time_t time, uint64_t states) {
 char *format_time(const time_t seconds, char *text, const size_t capacity) {
   struct tm gmt;
   gmtime_r(&seconds, &gmt);
-  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt.tm_year - 70, // NOLINT
+  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", // NOLINT
+           gmt.tm_year - 70,
            gmt.tm_mon, gmt.tm_mday - 1, gmt.tm_hour, gmt.tm_min, gmt.tm_sec);
   return text;
 }

@@ -59,7 +59,7 @@ typedef struct shared_data {
 /// This is the id of the thread
 /// @var private_data::shared_data
 /// This is the shared data of the threads
-typedef struct {
+typedef struct private_data {
   uint64_t start_row;
   uint64_t end_row;
   bool limit;
@@ -95,8 +95,6 @@ uint64_t transfer_serial(double *matrix1, double *matrix2, double formula,
 /// @brief This is the function to calculate the transfer of the with the
 /// threads
 /// @param shared_data shared data of the threads
-/// @param private_data private data of the threads
-/// @param thread_count count of threads
 void calculate_transfer(shared_data_t *shared_data);
 
 /// @brief This is the function to make the transfer of the plate
@@ -311,7 +309,8 @@ char *format_time(const time_t seconds, char *text, const size_t capacity) {
   struct tm gmt;
   /// use gmtime_r because is thread safe
   gmtime_r(&seconds, &gmt);
-  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", gmt.tm_year - 70, // NOLINT
+  snprintf(text, capacity, "%04d/%02d/%02d\t%02d:%02d:%02d", // NOLINT
+           gmt.tm_year - 70,
            gmt.tm_mon, gmt.tm_mday - 1, gmt.tm_hour, gmt.tm_min, gmt.tm_sec);
   return text;
 }

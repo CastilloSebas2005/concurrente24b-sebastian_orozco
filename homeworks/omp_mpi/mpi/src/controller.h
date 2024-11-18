@@ -9,9 +9,10 @@
  @details In this moment his implementation are null.
 */
 
-/// @brief this is to control the simulation
-/// @param argv arguments
-/// @param rank rank of process
+/// @brief This is the shared data of threads
+/// @param argv This is the arguments of the program
+/// @param rank This is the rank of the process
+/// @param rank_count This is the count of ranks
 void init_controller(char *argv[], int rank, int rank_count);
 
 #endif

@@ -6,11 +6,11 @@
 
 char *make_path(char *subdirectory, char *nameArchive) {
   if (!subdirectory) {
-    fprintf(stderr, "Error: subdirectory is null\n");
+    fprintf(stderr, "Error: subdirectory is null\n"); // NOLINT
     return NULL;
   }
   if (!nameArchive) {
-    fprintf(stderr, "Error: nameArchive is null\n");
+    fprintf(stderr, "Error: nameArchive is null\n"); // NOLINT
     return NULL;
   }
   // this is to calculate the memory corretly
@@ -26,7 +26,7 @@ char *make_path(char *subdirectory, char *nameArchive) {
   // assign the size of length2 + 2 and length1 to path
   char *path = malloc((length1 + length2) * sizeof(char));
   if (!path) {
-    fprintf(stderr, "Error: can't assing memory correctly\n");
+    fprintf(stderr, "Error: can't assing memory correctly\n"); // NOLINT
     return NULL;
   }
   size_t j = 0;

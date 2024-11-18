@@ -1,0 +1,194 @@
+procedure init_simulation(plate, Thread_count)
+  if plate.columns > 50 and plate.rows > 50 and Thread_count > 1 then
+    if Thread_count > plate.rows then
+      Thread_count := plate.rows
+    end if
+    print "Thread count simulation: " + Thread_count
+    declare shared_data as shared_data_t
+    shared_data.formula := (plate.time * plate.thermal_diffusivity) / (plate.alture * plate.alture)
+    shared_data.matrix1 := plate.arrayM1
+    shared_data.matrix2 := plate.arrayM2
+    shared_data.R := plate.rows
+    shared_data.C := plate.columns
+    shared_data.point := plate.sensitivity
+    shared_data.thread_count := Thread_count
+    shared_data.limit := false
+    shared_data.terminate := false
+    init_barrier(shared_data.barrier, Thread_count + 1)
+    declare threads as array of pthread_t of size Thread_count
+    declare private_data as array of private_data_t of size Thread_count
+    for i from 0 to Thread_count - 1 do
+      private_data[i].start_row := 1 + i * ((shared_data.R - 2) / Thread_count)
+      private_data[i].end_row := if i = Thread_count - 1 then shared_data.R - 1 else 1 + (i + 1) * ((shared_data.R - 2) / Thread_count)
+      private_data[i].thread_id := i
+      private_data[i].shared_data := shared_data
+      private_data[i].limit := false
+      pthread_create(threads[i], NULL, transfer_thread, private_data[i])
+    end for
+
+    declare states as uint64_t := transfer_parallel(shared_data, private_data)
+
+    // To indicate that threads should terminate
+    shared_data.terminate := true
+    wait_barrier(shared_data.barrier)
+
+    for i from 0 to Thread_count - 1 do
+      pthread_join(threads[i], NULL)
+    end for
+
+    destruct_barrier(shared_data.barrier)
+    free(shared_data)
+    free(threads)
+    free(private_data)
+    return states
+  end if
+
+  // this is the unique formula that have to apply
+  declare formula as double := (plate.time * plate.thermal_diffusivity) / (plate.alture * plate.alture)
+  declare array1 as double[] := plate.arrayM1
+  declare array2 as double[] := plate.arrayM2
+  declare R as uint64_t := plate.rows
+  declare C as uint64_t := plate.columns
+  declare point as double := plate.sensitivity
+  declare states as uint64_t := transfer_serial(array1, array2, formula, R, C, point)
+  if states = 0 then
+    return 0
+  end if
+  return states
+end procedure
+
+procedure transfer_serial(matrix1, matrix2, formula, R, C, point)
+  if matrix1 is NULL or matrix2 is NULL then
+    return 0
+  end if
+  declare states as uint64_t := 0
+  declare limit as bool := true
+  declare up, down, left, right, center as double
+  while limit do
+    limit := false
+    for i from 1 to R - 1 do
+      declare base_idx as uint64_t := i * C
+      for j from 1 to C - 1 do
+        declare idx as uint64_t := base_idx + j
+        up := matrix2[idx - C]
+        down := matrix2[idx + C]
+        left := matrix2[idx - 1]
+        right := matrix2[idx + 1]
+        center := matrix2[idx]
+        matrix1[idx] := center + formula * (up + right + down + left - 4 * center)
+        if abs(matrix1[idx] - center) > point then
+          limit := true
+        end if
+      end for
+    end for
+    // To update the matrix
+    if limit then
+      declare temp as double[] := matrix2
+      matrix2 := matrix1
+      matrix1 := temp
+    end if
+    states := states + 1
+  end while
+  return states
+end procedure
+
+procedure transfer_parallel(shared_data, private_data)
+  if shared_data.matrix1 is NULL or shared_data.matrix2 is NULL then
+    return 0
+  end if
+  declare states as uint64_t := 0
+  declare global_limit as bool := true
+
+  while global_limit do
+    global_limit := false
+
+    calculate_transfer(shared_data)
+
+    for i from 0 to shared_data.thread_count - 1 do
+      if private_data[i].limit then
+        global_limit := true
+        private_data[i].limit := false
+      end if
+    end for
+
+    if global_limit then
+      declare temp as double[] := shared_data.matrix2
+      shared_data.matrix2 := shared_data.matrix1
+      shared_data.matrix1 := temp
+    end if
+    states := states + 1
+  end while
+
+  return states
+end procedure
+
+procedure calculate_transfer(shared_data)
+  wait_barrier(shared_data.barrier)
+  wait_barrier(shared_data.barrier)
+end procedure
+
+procedure transfer_thread(private_data)
+  declare data as private_data_t := private_data
+  declare shared_data as shared_data_t := data.shared_data
+
+  while true do
+    wait_barrier(shared_data.barrier)
+
+    if shared_data.terminate then
+      break
+    end if
+
+    for i from data.start_row to data.end_row - 1 do
+      for j from 1 to shared_data.C - 1 do
+        declare idx as uint64_t := i * shared_data.C + j
+        declare up as double := shared_data.matrix2[idx - shared_data.C]
+        declare down as double := shared_data.matrix2[idx + shared_data.C]
+        declare left as double := shared_data.matrix2[idx - 1]
+        declare right as double := shared_data.matrix2[idx + 1]
+        declare center as double := shared_data.matrix2[idx]
+        shared_data.matrix1[idx] := center + shared_data.formula * (up + right + down + left - 4 * center)
+
+        if abs(shared_data.matrix1[idx] - center) > shared_data.point then
+          data.limit := true
+        end if
+      end for
+    end for
+    wait_barrier(shared_data.barrier)
+  end while
+
+  return NULL
+end procedure
+
+procedure make_line_to_report(lineReport, time, states)
+  if lineReport is NULL then
+    return NULL
+  end if
+  declare int_to_char as char[21]
+  format int_to_char with states
+  declare timeFormated as char[48]
+  format_time(time, timeFormated, 48)
+  declare buffer_size as size_t := length(lineReport) + 48 + 21 + 4
+  declare buffer as char[buffer_size]
+  if buffer is NULL then
+    print "Error: can't allocate memory for buffer"
+    return NULL
+  end if
+  format buffer with lineReport, states, timeFormated
+  return buffer
+end procedure
+
+procedure format_time(seconds, text, capacity)
+  declare gmt as struct tm
+  gmtime_r(seconds, gmt)
+  format text with gmt.tm_year - 70, gmt.tm_mon, gmt.tm_mday - 1, gmt.tm_hour, gmt.tm_min, gmt.tm_sec
+  return text
+end procedure
+
+procedure format_line(line)
+  for i from 0 to length(line) - 1 do
+    if line[i] = ' ' and line[i + 1] != ' ' then
+      line[i] := '\t'
+    end if
+  end for
+  return line
+end procedure

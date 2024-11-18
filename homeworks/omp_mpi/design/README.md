@@ -259,6 +259,8 @@ procedure init_controller(argc, argv[])
 end procedure
 ```
 
+Algunos pseudocodigos se actualizaron por lo que se deben revisar en la respectiva carpeta, el diseño de simulation no cuenta con versión mpi ya que el profesor autorizó dejar uno híbrido
+
 ## Memory Diagram
 
 Este es un diagrama de como se vería la memoria, no se quiere hacer exacto, pues sería muy difícil ya que en tiempo de compilación el tamaño de muchas variables es asignado, entonces depende de la arquitectura de la computadora donde se esté corriendo incluso, la cantidad de hilos y trabajo para cada hilo es asignado en tiempo de compilación.

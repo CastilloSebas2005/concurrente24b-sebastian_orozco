@@ -20,19 +20,11 @@ Debido a un problema con el comando "make test", las pruebas se deben correr man
 
 1. Compilación y ejecución del programa.
 
-    1. Asegurese de estar en la siguiente ruta: concurrente24b-sebastian_orozco/homeworks/pthreads
+    1. Asegurese de estar en la siguiente ruta: concurrente24b-sebastian_orozco/homeworks/omp_mpi/mpi
 
     1. Escriba el comando: make
 
-        1. Si desea probar la memoria del programa deberá hacerlo con los siguiente comandos...
-
-        1. make clean tsan (para la memoria de los hilos) luego de eso, simplemente ejecute el programa.
-
-        1. make clean asan (para la memoria serial) luego de eso, simplemente ejecute el programa.
-
-        1. valgrind ./bin/pthreads job002.txt tests/job002b output cantidad_hilos, sin embargo valgrind es un poco más lento que los anteriores.
-
-    1. Escriba en la terminal: ./bin/pthreads job002.txt tests/job002b output cantidad_hilos (en este caso se eligió el archivo de pruebas 2) esto para ejecutar el programa.
+    1. Escriba en la terminal: mpiexec -n (cantidad de procesos) ./bin/mpi job002.txt tests/job002b output cantidad_hilos (en este caso se eligió el archivo de pruebas 2) esto para ejecutar el programa.
 
 1. Cosas que recibe el programa como argumentos:
 
@@ -44,9 +36,9 @@ Debido a un problema con el comando "make test", las pruebas se deben correr man
 
     1. Cantidad de hilos a usar, si el programa recibe algo raro, fallará, favor solo ingresar números.
 
-    1. Ejemplo de correr el programa: ./bin/pthreads job002.txt tests/job002b output cantidad_hilos
+    1. Ejemplo de correr el programa: ./bin/mpi job002.txt tests/job002b output cantidad_hilos
 
-Es importante que siempre ingrese la cantidad de hilos, puesto que si no lo hace, el programa no funcionará, si ingresa 0 en la parte de hilos, el programa automaticamente asignará la cantidad de hilos que tenga su computadora por defecto.
+Es importante que siempre ingrese la cantidad de hilos y la cantidad de procesos, si el proceso es solamente 1, la ejecucion se hara serial, puesto que si no lo hace, el programa no funcionará, si ingresa 0 en la parte de hilos, el programa automaticamente asignará la cantidad de hilos que tenga su computadora por defecto.
 
 Si ingresa solo un hilo, el programa ignorará la creacion de hilos y se ejecutará de forma serial.
 Para manejar el indeterminismo en este programa se implemento la técnica de condición segura.
