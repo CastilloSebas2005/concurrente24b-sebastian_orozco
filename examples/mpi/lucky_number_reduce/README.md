@@ -12,3 +12,5 @@ Process 2: my lucky number is 10
 Process 3: my lucky number is 10
 Process 4: my lucky number is 62
 Para su solución y generar números pseudoaleatorios, puede usar el siguiente código base en C++.
+
+Solo se comentó el archivo lucky_number_reduce.cpp porque es el único que importa en este ejemplo.

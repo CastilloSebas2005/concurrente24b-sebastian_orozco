@@ -54,6 +54,8 @@ void generate_lucky_statistics(int process_number, int process_count) {
   int all_sum = -1;
 
   // Update distributed statistics from processes' lucky numbers
+  /// @note MPI_Reduce is a collective operation that reduces values on all processes
+  /// to a single value on a single process (root) or rank 0
   if (MPI_Reduce(/*input*/ &my_lucky_number, /*output*/ &all_min, /*count*/ 1
     , MPI_INT, MPI_MIN, /*root*/ 0, MPI_COMM_WORLD) != MPI_SUCCESS) {
     fail("error: could not reduce min");
@@ -67,6 +69,8 @@ void generate_lucky_statistics(int process_number, int process_count) {
     fail("error: could not reduce sum");
   }
 
+  /// @note Only the root process prints the final statistics
+  /// because the other processes do not have the final values
   if (process_number == 0) {
     const double all_average = double(all_sum) / process_count;
     std::cout << "Process " << process_number << ": all minimum = "
