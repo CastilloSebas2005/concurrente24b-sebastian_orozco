@@ -1,0 +1,2 @@
+@INCLUDE = ../../../common/Doxyfile
+PROJECT_NAME = "Lucky_number_reduce"
