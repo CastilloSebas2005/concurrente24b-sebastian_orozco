@@ -241,7 +241,7 @@ Conclusión:
 El análisis de los resultados muestra que la versión con 12 hilos (1C) es la más eficiente (según la fórmula, no se prueba en memoria) y proporciona el mejor rendimiento general (según la muestra). Incrementar el número de hilos más allá de este punto no resulta en mejoras significativas y, de hecho, puede disminuir la eficiencia debido a la sobrecarga de gestión de hilos.
 
 [[mpi_comparison]]
-=== Comparación del grado de concurrencia
+=== Comparación de rendimiento distribuido
 
 Nota: Los hallazgos comentados en esta sección serán en base a los gráficos generados en la sección de comparación de optimizaciones que se encuentra más arriba en este documento.
 
