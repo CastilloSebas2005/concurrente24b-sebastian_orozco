@@ -14,7 +14,7 @@
 /// calculate the minimum, maximum, sum and average of the lucky numbers
 /// for all processes.
 /// @param process_number
-/// @param process_count 
+/// @param process_count
 void generate_lucky_statistics(int process_number, int process_count);
 
 int main(int argc, char *argv[]) {
