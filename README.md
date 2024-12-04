@@ -79,15 +79,15 @@ Un semáforo es un entero con signo que se puede incrementar (signal) y decremen
 
 ### 15. Barrera
 
-No visto formalmente.
+Una barrera es una sincronización entre múltiples hilos o procesos en la que todos deben llegar a un punto específico antes de que cualquiera de ellos pueda continuar. Es útil para coordinar el progreso de tareas concurrentes.
 
 ### 16. Variable de condición
 
-No visto formalmente
+Una variable de condición es una herramienta de sincronización que permite a los hilos esperar hasta que una condición particular se cumpla. Se utiliza junto con un mutex para evitar condiciones de carrera.
 
 ### 17. Candado de lectura y escritura
 
-No visto formalmente
+Un candado de lectura y escritura es un mecanismo de sincronización que permite a múltiples hilos leer un recurso compartido simultáneamente, pero solo permite a un hilo escribir en el recurso a la vez. Esto mejora la concurrencia al permitir más operaciones de lectura concurrentes.
 
 ### 18. Descomposición
 
@@ -103,16 +103,18 @@ Beneficio obtenido al dividir una tarea entre múltiples recursos de procesamien
 
 ### 21. Eficiencia
 
+La eficiencia en el contexto de la computación paralela y distribuida se refiere a la medida de cómo se utiliza el tiempo de procesamiento disponible en un sistema. Se calcula como el cociente entre la aceleración (speedup) obtenida al ejecutar un programa en paralelo y el número de recursos de procesamiento utilizados (como hilos o procesos). La eficiencia indica qué tan bien se están utilizando los recursos adicionales para reducir el tiempo de ejecución. Una eficiencia del 100% significa que los recursos adicionales están siendo utilizados de manera óptima, mientras que una eficiencia menor indica que hay sobrecarga o ineficiencia en la paralelización.
+
 ### 22. Comunicación punto a punto entre procesos
 
-No visto formalmente
+La comunicación punto a punto entre procesos es un método de intercambio de datos directamente entre dos procesos en un sistema paralelo o distribuido. Esto puede implicar el uso de mensajes o buffers compartidos.
 
 ### 23. Comunicación colectiva entre procesos
 
-No visto formalmente
+La comunicación colectiva entre procesos implica la participación de múltiples procesos en una operación de comunicación, como la difusión de datos desde un proceso a todos los demás (broadcast) o la recolección de datos de todos los procesos en uno solo (gather).
 
 ### 24. Reducción
 
-No visto formalmente
+La reducción es una operación colectiva en la que se combinan los datos de todos los procesos en un solo resultado utilizando una operación específica, como la suma, el máximo o el mínimo. Es común en aplicaciones de computación paralela para resumir resultados distribuidos.
 
 Importante: Los conceptos son vistos durante las clases con el profesor Daniel Alvarado, también me apoye en los videos de Jeisson y google.
